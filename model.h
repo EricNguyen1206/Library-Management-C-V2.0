@@ -405,6 +405,28 @@ void PrintDSTable(DanhSachDauSach ArrDauSach, int begin, int end, int **MapId) {
 	}
 }
 
+void PrintDMTable(ListDMS *listDMS, int begin, int end, int **MapId) {
+	std::cout << "\ncheck ham in dau sach";
+	int row=0;
+	int X;
+	int Y=HEADER+BLOCK+MG;
+	char buffer [33];
+	NodeDMS *nodeDMS=listDMS->pFirst;
+	drawTable(MapId, tableTitleDanhMuc, tableTitleWidthDanhMuc, 3);
+	setcolor(0);
+	setbkcolor(MAIN_COLOR);
+	settextstyle(TEXT_FONT, 0, 2);
+	for(int i=begin; i<end; i++) {
+		std::cout<<"\ncheck i="<<i;
+		X=ACTICLE+MG*2;
+		outtextxy(X, Y, nodeDMS->data.MaSach);
+		outtextxy(X+=100, Y, TrangThaiSach[nodeDMS->data.TrangThai]);
+		outtextxy(X+=300, Y, nodeDMS->data.ViTri.c_str());
+		row++;
+		Y+=BLOCK;
+	}
+}
+
 void printMapId(int **MapId) {
 	for(int i=0; i<h; i+=38) {
 		for(int j=0; j<w; j+=38) {

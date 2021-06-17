@@ -10,6 +10,7 @@ int DauSachController(int **MapId, int &x, int &y) {
 	refreshMainLayout(MapId);
 	drawHeader(MapId, 1);
 	std::cout<<"\ncheck load file dau sach "<<LoadFileDauSach(ArrDauSach);
+	std::cout<<"\ncheck load file danh muc"<<LoadFileDanhMucSach(ArrDauSach);
 	int begin=0, end, pos;
 	char buffer[33];
 	DauSach *currentDS;
@@ -201,7 +202,11 @@ int DauSachController(int **MapId, int &x, int &y) {
 						drawNotification(ThemSachThanhCong);
 					}
             		break;
-				case 107:
+				case 107://in danh muc sach
+					{
+						int tmp1=0, tmp2=10;
+						PrintDMTable(currentDS->listDMS, tmp1, tmp2,MapId);
+					}
 					
             		break;
 				case 108://xoa dau sach
@@ -230,7 +235,7 @@ int DauSachController(int **MapId, int &x, int &y) {
 					btnDeleteDauSach.deleteBtn(BG_COLOR, MapId);
 					btnThemmoi.draw(MapId);
 					break;
-				case 109:
+				case 109://nut x tren Acticle
 					edThemISBN.deleteEdText(MAIN_COLOR, MapId);
 					edThemTenSach.deleteEdText(MAIN_COLOR, MapId);
 					edThemSoTrang.deleteEdText(MAIN_COLOR, MapId);
@@ -245,6 +250,9 @@ int DauSachController(int **MapId, int &x, int &y) {
 					btnDeleteDauSach.deleteBtn(BG_COLOR, MapId);
 
 					btnDanhMucSach.deleteBtn(ACTIVE_COLOR, MapId);
+					if(!btnThemmoi.isChoose) {
+						PrintDSTable(ArrDauSach, begin, end, MapId);
+					}
 					btnThemmoi.isChoose=false;
 					btnThemmoi.draw(MapId);
 					btnEscapeActicle.deleteBtn(ACTIVE_COLOR, MapId);

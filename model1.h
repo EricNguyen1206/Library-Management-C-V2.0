@@ -4,6 +4,72 @@
 #include <fstream>
 #include "local.h"
 #include "define.h"
+using namespace std;
+// ---------- Handle DanhMucSach's structure function ------------
+void InitListDMS(ListDMS *&listDMS) {
+	listDMS = new ListDMS;
+	listDMS->pFirst = NULL;
+}
+
+NodeDMS *CreateNodeDMS(danhMucSach *dms) {
+    NodeDMS *pNode=new NodeDMS;
+	pNode->data=*dms;
+    pNode->next=NULL;
+    return pNode;
+}
+
+void InsertLastDMS(ListDMS *&listDMS, danhMucSach *dms) {
+    NodeDMS *pNode=CreateNodeDMS(dms);
+    if(listDMS->pFirst==NULL) {
+        listDMS->pFirst=pNode;
+    } else {
+        NodeDMS *pTmp=listDMS->pFirst;
+         
+        while(pTmp->next!=NULL) {
+            pTmp=pTmp->next;
+        }
+        pTmp->next=pNode;
+	cout<<"\ncheck insert last, node last :"<<pNode->data.MaSach[5];
+    }
+}
+
+int LoadFileDanhMucSach(DanhSachDauSach &ArrDauSach) {
+	std::ifstream FileIn;
+	FileIn.open("DanhMucSach.txt", ios::in);
+	if(FileIn.fail()) {
+		return -1;
+	}
+	int temp=0, i=0, n, lenDms, trangthai;
+	danhMucSach *dms;
+	ListDMS* listDMS;
+	FileIn >> temp;
+	n=ArrDauSach.n;
+	while(!FileIn.eof() && i<n) {
+		listDMS=new ListDMS;
+		InitListDMS(listDMS);
+		lenDms=ArrDauSach.dsDauSach[i]->soLuong;
+		for(int j=0; j<lenDms; j++) {
+			string vitri, masach;
+			dms = new danhMucSach;
+			FileIn.ignore();
+			getline(FileIn, masach);
+			std::cout<<"\ncheck doc du lieu ma sach: "<<masach;
+			FileIn >> trangthai;
+			FileIn.ignore();
+			getline(FileIn, vitri);
+			dms = new danhMucSach;
+			strcpy(dms->MaSach, masach.c_str());
+			dms->TrangThai=trangthai;
+			dms->ViTri=vitri;
+			std::cout<<"\ncheck doc du lieu danhmucsach: "<<dms->ViTri;
+			InsertLastDMS(listDMS, dms);
+		}
+		ArrDauSach.dsDauSach[i]->listDMS=listDMS;
+		i++;
+	}
+	FileIn.close();
+	return i==n?i:1;
+}
 // ---------- Handle DauSach's structure function ------------
 int CompareDS(DauSach *a, DauSach *b, int mode) {//mode=0: so sanh theo the loai; else: so sanh theo ten
 	if(mode == 0) {
@@ -40,10 +106,8 @@ void SortDS(DanhSachDauSach &dsds) {
 
 int InsertDauSach(DanhSachDauSach &dsds, DauSach *ds) {
 	dsds.n++;
-	std::cout<<"\ncheck insert dau sach 1";
 	dsds.dsDauSach[dsds.n-1]=ds;
 //	SortDS(dsds);//sap xep lai theo thu tu
-	std::cout<<"\ncheck insert dau sach 2";
 	return 1;
 }
 
@@ -74,11 +138,9 @@ int LoadFileDauSach(DanhSachDauSach &ArrDauSach) {
 		FileIn >> dausach->luotMuon;//8
 		std::cout<<"\ncheck dau sach "<<i<<" :"<<dausach->tenSach;
 		i+=InsertDauSach(ArrDauSach, dausach);
-		std::cout<<"\ncheck insert dau sach 3; i="<<i;
 	}
 	i-=2;
 	std::cout<<"\ncheck doc du lieu i cuoi: "<<i<<" len cuoi="<<len;
-	std::cout<<"\ncheck n:"<<ArrDauSach.n;
 //	for(int i=0; i<len; i++) {
 //		std::cout<<"\ncheck dau sach "<<i<<" :"<<ArrDauSach.dsDauSach[i]->tenSach;
 //	}

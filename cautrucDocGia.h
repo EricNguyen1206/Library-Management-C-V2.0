@@ -18,7 +18,7 @@ struct NodeDMS {
 };
 
 struct ListDMS {
-	NodeDMS *first;
+	NodeDMS *pFirst;
 };
 
 struct DauSach{
@@ -28,7 +28,7 @@ struct DauSach{
 	string tenSach;
 	string tacGia;
 	string theLoai;
-//	ListDMS *listDMS = NULL;
+	ListDMS *listDMS = NULL;
 	int soLuong; //so luong sach trong danh muc sach
 	int luotMuon;	// //so luot muon cho tung dau sach
 }; 
