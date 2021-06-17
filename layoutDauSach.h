@@ -4,14 +4,11 @@
 #include "model.h"
 #include "local.h"
 #include "layoutDocGia.h"
-//std::cout<<"\ncheck khoi tao arrdau sach";
 	
 int DauSachController(int **MapId, int &x, int &y) {
 	
 	refreshMainLayout(MapId);
 	drawHeader(MapId, 1);
-//	std::cout<<"\ncheck khoi tao arrdau sach";
-//	DanhSachDauSach ArrDauSach;
 	std::cout<<"\ncheck load file dau sach "<<LoadFileDauSach(ArrDauSach);
 	int begin=0, end, pos;
 	char buffer[33];

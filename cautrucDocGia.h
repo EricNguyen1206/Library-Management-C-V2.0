@@ -6,6 +6,21 @@
 #include <string>
 using namespace std;
 
+struct danhMucSach {
+	char MaSach[10];
+	int TrangThai;
+	string ViTri;
+};
+
+struct NodeDMS {
+	danhMucSach data;
+	NodeDMS *next;
+};
+
+struct ListDMS {
+	NodeDMS *first;
+};
+
 struct DauSach{
 	char ISBN[6];
 	int soTrang;
