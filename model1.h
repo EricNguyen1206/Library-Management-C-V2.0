@@ -1,3 +1,4 @@
+#pragma once
 #include <ctime>
 #include "cautrucDocGia.h"
 #include <iostream>
@@ -29,7 +30,7 @@ void InsertLastDMS(ListDMS *&listDMS, danhMucSach *dms) {
             pTmp=pTmp->next;
         }
         pTmp->next=pNode;
-	cout<<"\ncheck insert last, node last :"<<pNode->data.MaSach[5];
+//	cout<<"\ncheck insert du lieu danh muc :"<<pNode->data.MaSach<<" tt:"<<pNode->data.TrangThai<<" vitri:"<<pNode->data.ViTri;
     }
 }
 
@@ -48,20 +49,18 @@ int LoadFileDanhMucSach(DanhSachDauSach &ArrDauSach) {
 		listDMS=new ListDMS;
 		InitListDMS(listDMS);
 		lenDms=ArrDauSach.dsDauSach[i]->soLuong;
+		if(i==0)
+			FileIn.ignore();
 		for(int j=0; j<lenDms; j++) {
 			string vitri, masach;
 			dms = new danhMucSach;
-			FileIn.ignore();
 			getline(FileIn, masach);
-			std::cout<<"\ncheck doc du lieu ma sach: "<<masach;
 			FileIn >> trangthai;
 			FileIn.ignore();
 			getline(FileIn, vitri);
-			dms = new danhMucSach;
 			strcpy(dms->MaSach, masach.c_str());
 			dms->TrangThai=trangthai;
 			dms->ViTri=vitri;
-			std::cout<<"\ncheck doc du lieu danhmucsach: "<<dms->ViTri;
 			InsertLastDMS(listDMS, dms);
 		}
 		ArrDauSach.dsDauSach[i]->listDMS=listDMS;
@@ -69,6 +68,16 @@ int LoadFileDanhMucSach(DanhSachDauSach &ArrDauSach) {
 	}
 	FileIn.close();
 	return i==n?i:1;
+}
+
+NodeDMS *GetNodeDmsById(ListDMS *listDMS, int Id) {
+	NodeDMS *pNode=listDMS->pFirst;
+	for(int i=140; i<=Id; i++) {
+		if(i==Id) {
+			return pNode;
+		}
+		pNode=pNode->next;
+	}
 }
 // ---------- Handle DauSach's structure function ------------
 int CompareDS(DauSach *a, DauSach *b, int mode) {//mode=0: so sanh theo the loai; else: so sanh theo ten
@@ -120,7 +129,6 @@ int LoadFileDauSach(DanhSachDauSach &ArrDauSach) {
 	int len, i=0;
 	string temp;
 	FileIn >> len;
-	std::cout<<"\ncheck doc du lieu n: "<<len;
 	DauSach *dausach;
 	while(i<len) {
 		dausach = new DauSach;
@@ -136,7 +144,6 @@ int LoadFileDauSach(DanhSachDauSach &ArrDauSach) {
 		getline(FileIn, dausach->theLoai);//6
 		FileIn >> dausach->soLuong;//7
 		FileIn >> dausach->luotMuon;//8
-		std::cout<<"\ncheck dau sach "<<i<<" :"<<dausach->tenSach;
 		i+=InsertDauSach(ArrDauSach, dausach);
 	}
 	i-=2;

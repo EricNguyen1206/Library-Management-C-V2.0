@@ -2,8 +2,9 @@
 #include <iostream>
 #include "define.h"
 #include "model.h"
+#include "model1.h"
 #include "local.h"
-#include "layoutDocGia.h"
+#include "cautrucDocGia.h"
 	
 int DauSachController(int **MapId, int &x, int &y) {
 	
@@ -23,6 +24,9 @@ int DauSachController(int **MapId, int &x, int &y) {
 	Button btnDanhMucSach(MG, HEADER, BLOCK, BLOCK, "...", 107);
 	Button btnDeleteDauSach(MG, UNIT*3+MG*2, BLOCK*4, BLOCK, "Xoa", 108);
 	Button btnEscapeActicle(ACTICLE-BLOCK+1, HEADER+1, BLOCK-2, BLOCK-2, "x", 109);
+	Button btnChoMuonDuoc(MG+BLOCK*4, YDS[2], BLOCK*4, BLOCK, "Chua muon", 160);
+	Button btnDaChoMuon(MG+BLOCK*4, YDS[3], BLOCK*4, BLOCK, "Da muon", 161);
+	Button btnDaThanhLy(MG+BLOCK*4, YDS[4], BLOCK*4, BLOCK, "Da thanh ly", 162);
 	
 	EditText edTimDauSach(ACTICLE+MG, UNIT*3+MG*2, BLOCK*16, BLOCK, "", "", "Nhap ten sach vao day", 110);
 	EditText edThemISBN(BLOCK, YDS[0]-UNIT, BLOCK*7-MG, BLOCK, "ISBN :","","Nhap du 5 so", 111);
@@ -34,6 +38,7 @@ int DauSachController(int **MapId, int &x, int &y) {
 	EditText edThongBao(MG*2, h-BLOCK*2, BLOCK*8-MG*3, BLOCK, "Thong bao :", "", "", 117);
 	EditText edSoLuong(BLOCK, YDS[4]-BLOCK-MG, BLOCK*7-MG, BLOCK, "So luong :","","Tu 1-999", 118);
 	EditText edViTri(BLOCK, YDS[5]+MG*2, BLOCK*7-MG, BLOCK, "Vi tri :","","Toi da 25 so va ky tu", 119);
+	EditText edMaSach(BLOCK, YDS[1], BLOCK*7-MG, BLOCK, "Ma sach", "", "", 163);
 	
 //	printMapId(MapId);
 	btnBackMenu.draw(MapId);
@@ -206,6 +211,8 @@ int DauSachController(int **MapId, int &x, int &y) {
 					{
 						int tmp1=0, tmp2=10;
 						PrintDMTable(currentDS->listDMS, tmp1, tmp2,MapId);
+						btnNextTable.deleteBtn(BG_COLOR, MapId);
+						btnBackTable.deleteBtn(BG_COLOR, MapId);
 					}
 					
             		break;
@@ -252,6 +259,8 @@ int DauSachController(int **MapId, int &x, int &y) {
 					btnDanhMucSach.deleteBtn(ACTIVE_COLOR, MapId);
 					if(!btnThemmoi.isChoose) {
 						PrintDSTable(ArrDauSach, begin, end, MapId);
+						btnNextTable.draw(MapId);
+						btnBackTable.draw(MapId);
 					}
 					btnThemmoi.isChoose=false;
 					btnThemmoi.draw(MapId);
@@ -327,12 +336,68 @@ int DauSachController(int **MapId, int &x, int &y) {
 					edThemTheLoai.draw(MapId);
 					drawNotification();
             		break;
-            	case 200://chuyen sang layoutDocGia
-            		FreeDSArr(ArrDauSach);
-            		return 2;
-            	case 300://chuyen sang layoutMuonTra
-					FreeDSArr(ArrDauSach);
-					return 3;
+            	case 140:
+            	case 141:
+            	case 142:
+            	case 143:
+            	case 144:
+            	case 145:
+            	case 146:
+            	case 147:
+            	case 148:
+            	case 149:
+            	case 150:
+            	case 151:
+            	case 152:
+					edThemISBN.deleteEdText(MAIN_COLOR, MapId);
+					edThemTenSach.deleteEdText(MAIN_COLOR, MapId);
+					edThemSoTrang.deleteEdText(MAIN_COLOR, MapId);
+					edThemTacGia.deleteEdText(MAIN_COLOR, MapId);
+					edThemNXB.deleteEdText(MAIN_COLOR, MapId);
+					edThemTheLoai.deleteEdText(MAIN_COLOR, MapId);
+					edSoLuong.deleteEdText(MAIN_COLOR, MapId);
+            		NodeDMS *pNode = GetNodeDmsById(currentDS->listDMS,MapId[y][x]);
+            		switch(pNode->data.TrangThai) {
+            			case 0:
+            				btnChoMuonDuoc.isChoose=true;
+            				btnDaChoMuon.isChoose=false;
+            				btnDaThanhLy.isChoose=false;
+            				break;
+            			case 1:
+            				btnChoMuonDuoc.isChoose=false;
+            				btnDaChoMuon.isChoose=true;
+            				btnDaThanhLy.isChoose=false;
+            				break;
+            			case 2:
+            				btnChoMuonDuoc.isChoose=false;
+            				btnDaChoMuon.isChoose=false;
+            				btnDaThanhLy.isChoose=true;
+            				break;
+					}
+            		strcpy(edMaSach.content, pNode->data.MaSach);
+					strcpy(edViTri.content, pNode->data.ViTri.c_str());
+					
+            		btnChoMuonDuoc.draw(MapId);
+            		btnDaChoMuon.draw(MapId);
+            		btnDaThanhLy.draw(MapId);
+            		
+            		edMaSach.draw(MapId);
+            		edViTri.draw(MapId);
+            		break;
+//            	case 160:
+//            		break;
+//            	case 161:
+//            		break;
+//            	case 162:
+//            		break;
+//            	case 163:
+//            		break;
+//            	case 200://chuyen sang layoutDocGia
+//            		FreeDSArr(ArrDauSach);
+//            		return 2;
+//            	case 300://chuyen sang layoutMuonTra
+//					FreeDSArr(ArrDauSach);
+//					return 3;
 			}
 			
         }

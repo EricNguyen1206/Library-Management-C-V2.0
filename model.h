@@ -416,14 +416,17 @@ void PrintDMTable(ListDMS *listDMS, int begin, int end, int **MapId) {
 	setcolor(0);
 	setbkcolor(MAIN_COLOR);
 	settextstyle(TEXT_FONT, 0, 2);
-	for(int i=begin; i<end; i++) {
-		std::cout<<"\ncheck i="<<i;
-		X=ACTICLE+MG*2;
-		outtextxy(X, Y, nodeDMS->data.MaSach);
-		outtextxy(X+=100, Y, TrangThaiSach[nodeDMS->data.TrangThai]);
-		outtextxy(X+=300, Y, nodeDMS->data.ViTri.c_str());
-		row++;
-		Y+=BLOCK;
+	NodeDMS *pNode = listDMS->pFirst;
+	X=ACTICLE+MG*2;
+	for(int i=0; i<end; i++) {
+		if(i>=begin) {
+			outtextxy(X, Y, pNode->data.MaSach);
+			outtextxy(X+100, Y, TrangThaiSach[pNode->data.TrangThai]);
+			outtextxy(X+400, Y, pNode->data.ViTri.c_str());
+			pNode=pNode->next;
+			setId(MapId, ACTICLE+MG, Y, TABLE_W, BLOCK, 140+i-begin);
+			Y+=BLOCK;
+		}
 	}
 }
 

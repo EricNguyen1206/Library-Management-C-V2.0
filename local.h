@@ -25,7 +25,7 @@ enum ModeSapXepDocGia{maDocGia, hoTen};
 enum TheLoaiSach{VanHoc, KinhTe, LichSu, TruyenTranh, GiaoTrinh, NgoaiNgu};
 
 char *MaSach[6]					= {"VH", "KT", "LS", "TT", "GT", "NN"};
-char *TrangThaiSach[15] 		= {"CHO MUON DUOC", "DA CHO MUON", "DA THANH LY"};
+char TrangThaiSach[3][30] 		= {"CHO MUON DUOC", "DA CHO MUON", "DA THANH LY"};
 char *TTMuonTra[10] 			= {"DANG MUON", "DA TRA", "LAM MAT"};
 char *TTTDocGia[10] 			= {"KHOA", "HOAT DONG"};
 char *PhaiDocGia[5] 			= {"NAM", "NU"};
