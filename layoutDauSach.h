@@ -21,7 +21,7 @@ int DauSachController(int **MapId, int &x, int &y) {
 	Button btnBackTable(ACTICLE+MG, h-BLOCK*2+MG, BLOCK*3, BLOCK, "<Back", 104);
 	Button btnNextTable(w-BLOCK*3-MG*2, h-BLOCK*2+MG, BLOCK*3, BLOCK, "Next>", 105);
 	Button btnConfirmThemmoi(BLOCK*4, h-BLOCK*2+MG, BLOCK*4, BLOCK, "Xac nhan", 106);
-	Button btnDanhMucSach(MG, HEADER, BLOCK, BLOCK, "...", 107);
+	Button btnDanhMucSach(MG+1, HEADER+1, BLOCK-2, BLOCK-2, "...", 107);
 	Button btnDeleteDauSach(MG, UNIT*3+MG*2, BLOCK*4, BLOCK, "Xoa", 108);
 	Button btnEscapeActicle(ACTICLE-BLOCK+1, HEADER+1, BLOCK-2, BLOCK-2, "x", 109);
 	Button btnChoMuonDuoc(MG+BLOCK*4, YDS[2], BLOCK*4, BLOCK, "Chua muon", 160);
@@ -75,6 +75,15 @@ int DauSachController(int **MapId, int &x, int &y) {
 	            	btnThemmoi.draw(MapId);
             		btnEscapeActicle.draw(MapId);
 					
+					edThemISBN.clear();
+					edThemTenSach.clear();
+					edThemSoTrang.clear();
+					edThemTacGia.clear();
+					edThemNXB.clear();
+					edThemTheLoai.clear();
+					edSoLuong.clear();
+					edViTri.clear();
+					
             		edThemISBN.draw(MapId);
 					edThemTenSach.draw(MapId);
 					edThemSoTrang.draw(MapId);
@@ -87,7 +96,24 @@ int DauSachController(int **MapId, int &x, int &y) {
 					break;
             	case 102:
             		if(!(btnDieuchinh.isLock)) {
-	            		drawActicle();
+						if(atoi(edSoLuong.content)<currentDS->soLuong) {
+							drawNotification(ChiDuocTangSoLuong);
+							goto ChinhSoLuong;//case 118
+						} else {
+							currentDS->soLuong=atoi(edSoLuong.content);
+							char MaSach[10];
+							itoa(currentDS->soLuong, buffer, 10);
+							strcpy(MaSach, currentDS->ISBN);
+							strcat(MaSach, "_");
+							strcat(MaSach, buffer);
+							danhMucSach *dms = new danhMucSach;
+							strcpy(dms->MaSach, MaSach);
+							dms->TrangThai=0;
+							dms->ViTri=currentDS->listDMS->pFirst->data.ViTri;
+							InsertLastDMS(currentDS->listDMS, dms);
+							std::cout<<"\ncheck chinh sua so luong: "<<dms->MaSach;
+						}
+						drawActicle();
 	            		
 	            		strcpy(currentDS->ISBN, edThemISBN.content);
 						currentDS->tenSach=edThemTenSach.content;
@@ -108,6 +134,7 @@ int DauSachController(int **MapId, int &x, int &y) {
 						drawNotification(HieuChinhSachThanhCong);
 						btnDieuchinh.deleteBtn(BG_COLOR, MapId);
 						btnDeleteDauSach.deleteBtn(BG_COLOR, MapId);
+						break;
 					}
             	case 103:
             		edTimDauSach.clear();
@@ -175,7 +202,7 @@ int DauSachController(int **MapId, int &x, int &y) {
 						}
 						
 						std::cout<<"\ncheck currentDS.soluong: " <<currentDS->soLuong;
-//						currentDS->listDMS=CreateListDMS(currentDS->ISBN, edViTri.content, currentDS->soLuong);
+						currentDS->listDMS=CreateListDMS(currentDS->ISBN, edViTri.content, currentDS->soLuong);
 						std::cout << InsertDauSach(ArrDauSach, currentDS);
 //						std::cout << currentDS->listDMS->pFirst->data.ViTri;
 						SortDS(ArrDauSach);
@@ -209,7 +236,9 @@ int DauSachController(int **MapId, int &x, int &y) {
             		break;
 				case 107://in danh muc sach
 					{
-						int tmp1=0, tmp2=10;
+						int tmp1=0, tmp2=(currentDS->soLuong<=13?currentDS->soLuong:13);
+						btnDanhMucSach.isLock=true;
+						btnDanhMucSach.draw(MapId);
 						PrintDMTable(currentDS->listDMS, tmp1, tmp2,MapId);
 						btnNextTable.deleteBtn(BG_COLOR, MapId);
 						btnBackTable.deleteBtn(BG_COLOR, MapId);
@@ -243,6 +272,27 @@ int DauSachController(int **MapId, int &x, int &y) {
 					btnThemmoi.draw(MapId);
 					break;
 				case 109://nut x tren Acticle
+					if(btnDanhMucSach.isLock) {
+						btnDanhMucSach.isLock=false;
+						btnDanhMucSach.draw(MapId);
+						btnChoMuonDuoc.deleteBtn(MAIN_COLOR, MapId);
+	            		btnDaChoMuon.deleteBtn(MAIN_COLOR, MapId);
+	            		btnDaThanhLy.deleteBtn(MAIN_COLOR, MapId);
+	            		
+	            		edMaSach.deleteEdText(MAIN_COLOR, MapId);
+	            		edViTri.deleteEdText(MAIN_COLOR, MapId);
+	            		
+	            		edThemISBN.draw(MapId);
+						edThemTenSach.draw(MapId);
+						edThemSoTrang.draw(MapId);
+						edThemTacGia.draw(MapId);
+						edSoLuong.draw(MapId);
+						edThemNXB.draw(MapId);
+						edThemTheLoai.draw(MapId);
+						drawNotification();
+						PrintDSTable(ArrDauSach, begin, end, MapId);
+	            		break;
+					}
 					edThemISBN.deleteEdText(MAIN_COLOR, MapId);
 					edThemTenSach.deleteEdText(MAIN_COLOR, MapId);
 					edThemSoTrang.deleteEdText(MAIN_COLOR, MapId);
@@ -281,9 +331,8 @@ int DauSachController(int **MapId, int &x, int &y) {
             	case 114:
             		ScanString(edThemTacGia, 20, MapId);
             	case 118://sl
-            		if(btnThemmoi.isChoose) {
-            			ScanNumber(edSoLuong, 3, MapId);
-					}
+            		ChinhSoLuong:
+            		ScanNumber(edSoLuong, 3, MapId);
             	case 115:
 					labelNhapNXB:
             		ScanNumber(edThemNXB, 4, MapId);
@@ -325,6 +374,8 @@ int DauSachController(int **MapId, int &x, int &y) {
 					itoa(currentDS->soTrang, buffer, 10);
 					strcpy(edThemSoTrang.content, buffer);
 					strcpy(edThemTacGia.content, currentDS->tacGia.c_str());
+					itoa(currentDS->soLuong, buffer, 10);
+					strcpy(edSoLuong.content, buffer);
 					itoa(currentDS->namXuatBan, buffer, 10);
 					strcpy(edThemNXB.content, buffer);
 					strcpy(edThemTheLoai.content, currentDS->theLoai.c_str());
@@ -332,6 +383,7 @@ int DauSachController(int **MapId, int &x, int &y) {
 					edThemTenSach.draw(MapId);
 					edThemSoTrang.draw(MapId);
 					edThemTacGia.draw(MapId);
+					edSoLuong.draw(MapId);
 					edThemNXB.draw(MapId);
 					edThemTheLoai.draw(MapId);
 					drawNotification();

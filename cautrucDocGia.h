@@ -22,7 +22,7 @@ struct ListDMS {
 };
 
 struct DauSach{
-	char ISBN[6];
+	char ISBN[10];
 	int soTrang;
 	int namXuatBan;
 	string tenSach;

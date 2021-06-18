@@ -79,6 +79,36 @@ NodeDMS *GetNodeDmsById(ListDMS *listDMS, int Id) {
 		pNode=pNode->next;
 	}
 }
+ListDMS* CreateListDMS(char ISBN[], string vitri, int n) {
+	ListDMS *listDMS;
+	InitListDMS(listDMS);
+	std::cout<<"\ncheck init listdms";
+	danhMucSach *dms;
+	std::cout<<"\ncheck dms";
+	char buffer[33];
+	char MaSach[10];
+	int index;
+	std::cout<<"\ncheck n: "<<n;
+	std::cout<<"\ncheck khoi tao creat dms";
+	for(int i=1; i<=n; i++) {
+		std::cout<<"\ncheck 1.0";
+		dms = new danhMucSach;
+		dms->ViTri=vitri;
+		std::cout<<"\ncheck 1.1";
+		itoa(i, buffer, 10);
+		strcpy(MaSach, ISBN);
+		strcat(MaSach, "_");
+		std::cout<<"\ncheck 1.2";
+		strcat(MaSach, buffer);
+		strcpy(dms->MaSach, MaSach);
+		std::cout<<"\ncheck 1.3";
+		dms->TrangThai=0;
+		std::cout<<"\ncheck tao data dms; ma sach: "<<MaSach;
+		InsertLastDMS(listDMS, dms);
+	}
+	std::cout<<"\ncheck 2";
+	return listDMS;
+}
 // ---------- Handle DauSach's structure function ------------
 int CompareDS(DauSach *a, DauSach *b, int mode) {//mode=0: so sanh theo the loai; else: so sanh theo ten
 	if(mode == 0) {

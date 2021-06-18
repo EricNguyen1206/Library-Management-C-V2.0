@@ -42,6 +42,7 @@ char HieuChinhSachThanhCong[] 	= "HIEU CHINH SACH THANH CONG!";
 char XoaDauSachThanhCong[]		= "XOA DAU SACH THANH CONG";
 char IsbnDaTonTai[]				= "ISBN DA TON TAI";
 char NamXuatBanKhongHopLe[]		= "NAM XUAT BAN KHONG HOP LE";
+char ChiDuocTangSoLuong[]		= "CHI DUOC TANG SO LUONG SACH";
 char ThemDocGiaThanhCong[]		= "THEM DOC GIA THANH CONG";
 char HieuChinhDocGiaThanhCong[]	= "HIEU CHINH DOC GIA THANH CONG";
 char XoaDocGiaThanhCong[]		= "XOA DOC GIA THANH CONG";
