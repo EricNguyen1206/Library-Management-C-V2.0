@@ -109,6 +109,27 @@ ListDMS* CreateListDMS(char ISBN[], string vitri, int n) {
 	std::cout<<"\ncheck 2";
 	return listDMS;
 }
+
+int deleteNodeDMS(DauSach *dauSach, NodeDMS *pDel) {
+	if(dauSach->listDMS->pFirst==NULL) {
+		return -1;
+	}
+	if(strcmp(pDel->data.MaSach, dauSach->listDMS->pFirst->data.MaSach)==0) {
+		dauSach->listDMS->pFirst=dauSach->listDMS->pFirst->next;
+		delete pDel;
+		return 0;
+	}
+	NodeDMS *pNode=dauSach->listDMS->pFirst;
+	while(strcmp(pDel->data.MaSach, pNode->next->data.MaSach)!=0) {
+		pNode=pNode->next;
+	}
+	pNode->next=pDel->next;
+	delete pDel;
+	dauSach->soLuong--;
+	std::cout<<"\ncheck xoa node dms; So Luong sau xoa: "<<dauSach->soLuong;
+	return 0;
+	
+}
 // ---------- Handle DauSach's structure function ------------
 int CompareDS(DauSach *a, DauSach *b, int mode) {//mode=0: so sanh theo the loai; else: so sanh theo ten
 	if(mode == 0) {
