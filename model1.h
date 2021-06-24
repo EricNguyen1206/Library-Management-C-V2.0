@@ -5,6 +5,7 @@
 #include <fstream>
 #include "local.h"
 #include "define.h"
+#include "string"
 using namespace std;
 // ---------- Handle DanhMucSach's structure function ------------
 void InitListDMS(ListDMS *&listDMS) {
@@ -246,6 +247,42 @@ void FreeDSArr(DanhSachDauSach &dsds) {
 		XoaDauSach(dsds, dsds.n-1);
 	}
 }
+
+//void HienSachGoiY(DanhSachDauSach dsds, string duLieuNhapVao) {
+//	int j = -1;
+//	DanhSachDauSach m;	// luu phan tu co ten sach chua chuoi do vao mang moi
+//	string temp2 = duLieuNhapVao;	// khong thay doi dinh dang truc tiep du lieu nhap vao
+//	ChuanHoaChuoi(temp2);
+//	for(int i = 0; i < dsds.n; i++) {
+//		if (dsds.dsDauSach[i]->tenSach.find(temp2) != string::npos) {	// != nopsition, tuc co chuoi do trong ten sach
+//			m.dsDauSach[++j] = dsds.dsDauSach[i];	
+//				cout <<m.dsDauSach[j]->tenSach;		// hien thi goi y ten sach
+//		}
+//	}
+//	if(j == -1) 
+//		cout <<"Khong co ket qua.";
+//}
+
+DanhSachDauSach SearchDauSach(DanhSachDauSach dsds, string input) {
+	int i, j=-1;
+	DanhSachDauSach temp;
+	temp.n=0;
+	input.erase(input.length()-1);
+	std::cout<<"\ncheck ham search, noi dung search:"<<input<<" do dai:"<<input.length();
+	std::cout<<"\ncheck do dai dsds ban dau:"<<dsds.n;
+	for(i=0; i<dsds.n; i++) {
+		int search = dsds.dsDauSach[i]->tenSach.find(input);
+		if(search != -1) {
+			std::cout<<"\ncheck so sanh ten sach: "<<dsds.dsDauSach[i]->tenSach<<" & "<<input;
+			temp.dsDauSach[++j] = dsds.dsDauSach[i];
+			temp.n++;
+		} else {
+			std::cout<<"\nKhong tim thay "<<input<<" trong chuoi "<<dsds.dsDauSach[i]->tenSach;
+		}
+	}
+	return temp;
+}
+
 int SoLuongDocGia = 0;
 // ---------- Nhap Xuat file ------------
 int LoadFileTheDocGia(Tree &Root) {

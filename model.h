@@ -4,6 +4,7 @@
 #include "local.h"
 #include <string>
 #include "cautrucDocGia.h"
+#include "model1.h"
 
 void resetMapID(int **MapId);
 void refreshMapID(int **MapId);
@@ -380,7 +381,6 @@ void PrintDSTable(DanhSachDauSach ArrDauSach, int begin, int end, int **MapId) {
 	int Y=HEADER+BLOCK+MG;
 	DauSach *pointerDS;
 	std::cout << "\ncheck begin:"<<begin<<" check end:"<<end;
-//	refreshTable(MapId, tableTitleWidthDauSach, 6);
 	drawTable(MapId, tableTitleDauSach, tableTitleWidthDauSach, 6);
 	setcolor(0);
 	setbkcolor(MAIN_COLOR);
@@ -510,3 +510,58 @@ void ScanNumber(EditText &EDIT, int maxlen, int **MapId) {
 	EDIT.draw(MapId);
 }
 
+ScanSearchDS(EditText &EDIT, int maxlen, DanhSachDauSach dsds, DanhSachDauSach &searchDS, int **MapId) {
+	char c;
+	int len;
+	len=strlen(EDIT.content);
+	EDIT.content[len]='_';
+	EDIT.content[len+1]='\0';
+	EDIT.draw(MapId);
+	std::cout<<"\ncheck ham search";
+	while(1) {
+		len=strlen(EDIT.content);
+		c=getch();
+		if((c>='A' && c<='Z' || c>='0' && c<='9' || c=='_' || c==' ')  && len<=maxlen) {
+			EDIT.content[len-1]=c;
+			EDIT.content[len]='_';
+			EDIT.content[len+1]='\0';
+			len++;
+			searchDS = SearchDauSach(dsds, EDIT.content);
+			std::cout<<"\ncheck search n:"<<searchDS.n;
+            PrintDSTable(searchDS, 0, searchDS.n>=13?13:searchDS.n, MapId);
+
+		} else if((c>='a' && c<='z')  && len<=maxlen) {
+			c=c-'a'+'A';
+			EDIT.content[len-1]=c;
+			EDIT.content[len]='_';
+			EDIT.content[len+1]='\0';
+			len++;
+			searchDS = SearchDauSach(dsds, EDIT.content);
+			std::cout<<"\ncheck search n:"<<searchDS.n;
+           	PrintDSTable(searchDS, 0, searchDS.n>=13?13:searchDS.n, MapId);
+
+		} else if(c==BACKSPACE) {
+			if(len==0 || EDIT.content[0]=='_') {
+				continue;
+			} else {
+				EDIT.content[len-2]='_';
+				EDIT.content[len-1]='\0';
+				EDIT.content[len]='\0';
+				len--;
+				
+				searchDS = SearchDauSach(dsds, EDIT.content);
+				std::cout<<"\ncheck search n:"<<searchDS.n;
+	        	PrintDSTable(searchDS, 0, searchDS.n>=13?13:searchDS.n, MapId);
+			}
+		} else if(c==ENTER) {
+			searchDS = SearchDauSach(dsds, EDIT.content);
+			std::cout<<"\ncheck search n:"<<searchDS.n;
+            PrintDSTable(searchDS, 0, searchDS.n>=13?13:searchDS.n, MapId);
+			break;
+		}
+		EDIT.draw(MapId);
+	}
+	EDIT.content[len]='\0';
+	EDIT.content[len-1]='\0';
+	EDIT.draw(MapId);
+}

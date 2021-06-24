@@ -12,10 +12,11 @@ int DauSachController(int **MapId, int &x, int &y) {
 	drawHeader(MapId, 1);
 	std::cout<<"\ncheck load file dau sach "<<LoadFileDauSach(ArrDauSach);
 	std::cout<<"\ncheck load file danh muc"<<LoadFileDanhMucSach(ArrDauSach);
-	int begin=0, end, pos;
+	int mode=0, begin=0, end, pos;//mode = 0: mac dinh,mode = 1: tim kiem 
 	char buffer[33];
 	DauSach *currentDS;
 	NodeDMS *pNode;
+	DanhSachDauSach searchDS;
 	Button btnThemmoi(MG+BLOCK*4, UNIT*3+MG*2, BLOCK*4, BLOCK, "Them moi", 101);
 	Button btnDieuchinh(ACTICLE-BLOCK*4, UNIT*3+MG*2, BLOCK*4, BLOCK, "Dieu chinh", 102);
 	Button btnTimkiem(w-BLOCK*3-MG,  UNIT*3+MG*2, BLOCK*3, BLOCK, "Tim", 103);
@@ -25,9 +26,6 @@ int DauSachController(int **MapId, int &x, int &y) {
 	Button btnDanhMucSach(MG+1, HEADER+1, BLOCK-2, BLOCK-2, "...", 107);
 	Button btnDeleteDauSach(MG, UNIT*3+MG*2, BLOCK*4, BLOCK, "Xoa", 108);
 	Button btnEscapeActicle(ACTICLE-BLOCK+1, HEADER+1, BLOCK-2, BLOCK-2, "x", 109);
-	Button btnChoMuonDuoc(MG+BLOCK*4, YDS[2], BLOCK*4, BLOCK, "Chua muon", 160);
-	Button btnDaChoMuon(MG+BLOCK*4, YDS[3], BLOCK*4, BLOCK, "Da muon", 161);
-	Button btnDaThanhLy(MG+BLOCK*4, YDS[4], BLOCK*4, BLOCK, "Da thanh ly", 162);
 	
 	EditText edTimDauSach(ACTICLE+MG, UNIT*3+MG*2, BLOCK*16, BLOCK, "", "", "Nhap ten sach vao day", 110);
 	EditText edThemISBN(BLOCK, YDS[0]-UNIT, BLOCK*7-MG, BLOCK, "ISBN :","","Nhap du 5 so", 111);
@@ -39,9 +37,8 @@ int DauSachController(int **MapId, int &x, int &y) {
 	EditText edThongBao(MG*2, h-BLOCK*2, BLOCK*8-MG*3, BLOCK, "Thong bao :", "", "", 117);
 	EditText edSoLuong(BLOCK, YDS[4]-BLOCK-MG, BLOCK*7-MG, BLOCK, "So luong :","","Tu 1-999", 118);
 	EditText edViTri(BLOCK, YDS[5]+MG*2, BLOCK*7-MG, BLOCK, "Vi tri :","","Toi da 25 so va ky tu", 119);
-	EditText edMaSach(BLOCK, YDS[1], BLOCK*7-MG, BLOCK, "Ma sach", "", "", 163);
+	EditText edMaSach(BLOCK, YDS[1], BLOCK*7-MG, BLOCK, "Ma sach:", "", "", 163);
 	
-//	printMapId(MapId);
 	btnBackMenu.draw(MapId);
 	btnExit.draw(MapId);
 	
@@ -143,8 +140,11 @@ int DauSachController(int **MapId, int &x, int &y) {
 						break;
 					}
             	case 103:
+            		searchDS = SearchDauSach(ArrDauSach, edTimDauSach.content);
             		edTimDauSach.clear();
             		edTimDauSach.draw(MapId);
+            		PrintDSTable(searchDS, 0, searchDS.n>=13?13:searchDS.n, MapId);
+            		mode=1;
             		break;
             	case 104:
             		if(begin>0 && !btnBackTable.isLock) {
@@ -251,16 +251,6 @@ int DauSachController(int **MapId, int &x, int &y) {
 					}
             		break;
 				case 108://xoa dau sach/ sach trong dms
-					if(btnDanhMucSach.isLock) {
-						if(pNode->data.TrangThai==2) {
-							std::cout<<"\nCheck ket qua delete: "<<deleteNodeDMS(currentDS, pNode);
-							drawNotification(XoaSachThanhCong);
-							goto PrintDMS;
-							break;
-						}
-						drawNotification(KhongDuocXoaSachNay);
-						break;
-					}
 					edThemISBN.clear();
 					edThemTenSach.clear();
 					edThemSoTrang.clear();
@@ -290,9 +280,6 @@ int DauSachController(int **MapId, int &x, int &y) {
 					if(btnDanhMucSach.isLock) {
 						btnDanhMucSach.isLock=false;
 						btnDanhMucSach.draw(MapId);
-						btnChoMuonDuoc.deleteBtn(MAIN_COLOR, MapId);
-	            		btnDaChoMuon.deleteBtn(MAIN_COLOR, MapId);
-	            		btnDaThanhLy.deleteBtn(MAIN_COLOR, MapId);
 	            		
 	            		edMaSach.deleteEdText(MAIN_COLOR, MapId);
 	            		edViTri.deleteEdText(MAIN_COLOR, MapId);
@@ -334,7 +321,8 @@ int DauSachController(int **MapId, int &x, int &y) {
 					btnEscapeActicle.deleteBtn(ACTIVE_COLOR, MapId);
 					break;
             	case 110:
-            		ScanString(edTimDauSach, 30, MapId);
+            		ScanSearchDS(edTimDauSach, 30, ArrDauSach, searchDS, MapId);
+            		mode = 1;
             		break;
             	case 111:
             		labelThemDauSach:
@@ -385,7 +373,11 @@ int DauSachController(int **MapId, int &x, int &y) {
             		btnDanhMucSach.draw(MapId);
             		btnEscapeActicle.draw(MapId);
             		pos=MapId[y][x]-120+begin;
-            		currentDS=ArrDauSach.dsDauSach[pos];
+            		if(mode == 1) {
+            			currentDS=searchDS.dsDauSach[pos];
+					} else {
+            			currentDS=ArrDauSach.dsDauSach[pos];
+					}
             		strcpy(edThemISBN.content, currentDS->ISBN);
 					strcpy(edThemTenSach.content, currentDS->tenSach.c_str());
 					itoa(currentDS->soTrang, buffer, 10);
@@ -405,106 +397,12 @@ int DauSachController(int **MapId, int &x, int &y) {
 					edThemTheLoai.draw(MapId);
 					drawNotification();
             		break;
-            	case 140:
-            	case 141:
-            	case 142:
-            	case 143:
-            	case 144:
-            	case 145:
-            	case 146:
-            	case 147:
-            	case 148:
-            	case 149:
-            	case 150:
-            	case 151:
-            	case 152:
-					edThemISBN.deleteEdText(MAIN_COLOR, MapId);
-					edThemTenSach.deleteEdText(MAIN_COLOR, MapId);
-					edThemSoTrang.deleteEdText(MAIN_COLOR, MapId);
-					edThemTacGia.deleteEdText(MAIN_COLOR, MapId);
-					edThemNXB.deleteEdText(MAIN_COLOR, MapId);
-					edThemTheLoai.deleteEdText(MAIN_COLOR, MapId);
-					edSoLuong.deleteEdText(MAIN_COLOR, MapId);
-            		pNode = GetNodeDmsById(currentDS->listDMS,MapId[y][x]);
-            		switch(pNode->data.TrangThai) {
-            			case 0:
-            				btnChoMuonDuoc.isChoose=true;
-            				btnDaChoMuon.isChoose=false;
-            				btnDaThanhLy.isChoose=false;
-            				break;
-            			case 1:
-            				btnChoMuonDuoc.isChoose=false;
-            				btnDaChoMuon.isChoose=true;
-            				btnDaThanhLy.isChoose=false;
-            				break;
-            			case 2:
-            				btnChoMuonDuoc.isChoose=false;
-            				btnDaChoMuon.isChoose=false;
-            				btnDaThanhLy.isChoose=true;
-            				break;
-					}
-            		strcpy(edMaSach.content, pNode->data.MaSach);
-					strcpy(edViTri.content, pNode->data.ViTri.c_str());
-					
-            		btnChoMuonDuoc.draw(MapId);
-            		btnDaChoMuon.draw(MapId);
-            		btnDaThanhLy.draw(MapId);
-            		
-            		edMaSach.draw(MapId);
-            		edViTri.draw(MapId);
-            		break;
-            	case 160:
-            		if(!btnChoMuonDuoc.isChoose) {
-            			btnChoMuonDuoc.isChoose=true;
-        				btnDaChoMuon.isChoose=false;
-        				btnDaThanhLy.isChoose=false;
-        				
-        				btnChoMuonDuoc.draw(MapId);
-	            		btnDaChoMuon.draw(MapId);
-	            		btnDaThanhLy.draw(MapId);
-	            		pNode->data.TrangThai=0;
-	            		btnDieuchinh.isLock=false;
-	            		btnDieuchinh.draw(MapId);
-					}
-            		break;
-            	case 161:
-            		if(!btnDaChoMuon.isChoose) {
-            			btnChoMuonDuoc.isChoose=false;
-        				btnDaChoMuon.isChoose=true;
-        				btnDaThanhLy.isChoose=false;
-        				
-        				btnChoMuonDuoc.draw(MapId);
-	            		btnDaChoMuon.draw(MapId);
-	            		btnDaThanhLy.draw(MapId);
-	            		
-	            		pNode->data.TrangThai=1;
-	            		btnDieuchinh.isLock=false;
-	            		btnDieuchinh.draw(MapId);
-					}
-            		break;
-            	case 162:
-            		if(!btnDaThanhLy.isChoose) {
-            			btnChoMuonDuoc.isChoose=false;
-        				btnDaChoMuon.isChoose=false;
-        				btnDaThanhLy.isChoose=true;
-        				
-        				btnChoMuonDuoc.draw(MapId);
-	            		btnDaChoMuon.draw(MapId);
-	            		btnDaThanhLy.draw(MapId);
-	            		
-	            		pNode->data.TrangThai=2;
-	            		btnDieuchinh.isLock=false;
-	            		btnDieuchinh.draw(MapId);
-					}
-            		break;
-            	case 163:
-            		break;
-//            	case 200://chuyen sang layoutDocGia
-//            		FreeDSArr(ArrDauSach);
-//            		return 2;
-//            	case 300://chuyen sang layoutMuonTra
-//					FreeDSArr(ArrDauSach);
-//					return 3;
+            	case 200://chuyen sang layoutDocGia
+            		FreeDSArr(ArrDauSach);
+            		return 2;
+            	case 300://chuyen sang layoutMuonTra
+					FreeDSArr(ArrDauSach);
+					return 3;
 			}
 			
         }
