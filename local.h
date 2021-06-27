@@ -26,9 +26,9 @@ enum TheLoaiSach{VanHoc, KinhTe, LichSu, TruyenTranh, GiaoTrinh, NgoaiNgu};
 
 char *MaSach[6]					= {"VH", "KT", "LS", "TT", "GT", "NN"};
 char TrangThaiSach[3][30] 		= {"CHO MUON DUOC", "DA CHO MUON", "DA THANH LY"};
-char *TTMuonTra[10] 			= {"DANG MUON", "DA TRA", "LAM MAT"};
-char *TTTDocGia[10] 			= {"KHOA", "HOAT DONG"};
-char *PhaiDocGia[5] 			= {"NAM", "NU"};
+char TTMuonTra[3][30] 			= {"DANG MUON", "DA TRA", "LAM MAT"};
+char TTTDocGia[2][30] 			= {"KHOA", "HOAT DONG"};
+char PhaiDocGia[2][30] 			= {"NAM", "NU"};
 
 char mess[30];
 //Cac tieu de su dung
@@ -42,6 +42,7 @@ char HieuChinhSachThanhCong[] 	= "HIEU CHINH SACH THANH CONG!";
 char XoaDauSachThanhCong[]		= "XOA DAU SACH THANH CONG";
 char XoaSachThanhCong[]			= "XOA SACH THANH CONG";
 char KhongDuocXoaSachNay[]		= "KHONG DUOC XOA SACH NAY";
+char KhongTimThaySach[]			= "KHONG TIM THAY SACH";
 char IsbnDaTonTai[]				= "ISBN DA TON TAI";
 char NamXuatBanKhongHopLe[]		= "NAM XUAT BAN KHONG HOP LE";
 char ChiDuocTangSoLuong[]		= "CHI DUOC TANG SO LUONG SACH";
@@ -52,7 +53,7 @@ char ThongTinKhongDuocDeTrong[] = "THONG TIN KHONG DUOC DE TRONG!";
 char NhapSach[] 				= "NHAP SACH";
 char HieuChinhSach[] 			= "HIEU CHINH SACH";
 char ThongBao[] 				= "THONG BAO: ";
-char DanhMucSach[80] 			= "DANH MUC SACH";
+char DanhMucSach[] 				= "DANH MUC SACH";
 char DocGiaTitle[] 				= "DANH SACH DOC GIA";
 char ThemDocGia[] 				= "THEM DOC GIA";
 char HieuChinhDocGia[] 			= "HIEU CHINH DOC GIA";

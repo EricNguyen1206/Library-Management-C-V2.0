@@ -12,7 +12,7 @@
 int DocGiaController(int **MapId, int &x, int &y) {
 	int lenDG=0, begin=0, end, mode=1, index;
 	int NewId;
-	char buffer[33];
+	char buffer[30];
 	NodeBST *p = new NodeBST;
 	DocGia ListDG[MAXDOCGIA];
 	DocGia current;
@@ -349,8 +349,8 @@ int DocGiaController(int **MapId, int &x, int &y) {
 					btnConditionActive.draw(MapId);
 					btnConditionBlocked.draw(MapId);
             		break;
-//            	case 300:
-//            		return 3;
+            	case 300:
+            		return 3;
 			}
 			
         }

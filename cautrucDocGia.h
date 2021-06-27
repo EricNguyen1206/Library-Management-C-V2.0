@@ -38,22 +38,30 @@ struct DanhSachDauSach{
 };
 
 DanhSachDauSach ArrDauSach;
-//// ---------- Muon Tra ------------
-//struct Date {
-//	int ngay;
-//	int thang;
-//	int nam;
-//};
-//struct MuonTra{
-//	string maSach;
-//	Date ngayMuon;
-//	Date ngayTra;
-//	TrangThai trangThai;
-//};
-//struct NodeMuonTra{
-//	MuonTra info;
-//	NodeMuonTra *next;
-//}
+//std::cout<<"\ncheck load file dau sach "<<LoadFileDauSach(ArrDauSach);
+//std::cout<<"\ncheck load file danh muc"<<LoadFileDanhMucSach(ArrDauSach);
+// ---------- Muon Tra ------------
+struct Date {
+	int ngay;
+	int thang;
+	int nam;
+};
+
+struct MuonTra{
+	string maSach;
+	Date ngayMuon;
+	Date ngayTra;
+	int trangThai;
+};
+
+struct NodeMuonTra {
+	MuonTra data;
+	NodeMuonTra *next;
+};
+
+struct ListMT {
+	NodeMuonTra *pFirst;
+};
 
 // ---------- The Doc Gia ------------
 struct DocGia{
@@ -70,7 +78,7 @@ struct DocGia{
 //	1: Hoat dong
 
 //	dslk don luu cac sach ma doc gia da va dang muon
-//	DS_MuonTra mt;
+	ListMT *listMT = NULL;
 	
 	DocGia(){
 	}
@@ -127,8 +135,7 @@ int InsertNode(Tree &Root, NodeBST *x) {
 }
 
 NodeBST *FindNode(Tree Root, NodeBST *x){
-	if (Root)
-    {
+	if (Root) {
         if (Root->data.MATHE == x->data.MATHE)
             return Root;
         if (x->data.MATHE < Root->data.MATHE)
@@ -189,4 +196,3 @@ int DeleteNodeBST(Tree &Root, NodeBST *x) {
 	return 0;
 }
 Tree CayDocGia=NULL;
-
