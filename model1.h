@@ -131,6 +131,14 @@ int deleteNodeDMS(DauSach *dauSach, NodeDMS *pDel) {
 	return 0;
 	
 }
+
+NodeDMS *GetNodeDmsInDauSach(DauSach *dausach, int index) {
+	NodeDMS *pNode=dausach->listDMS->pFirst;
+	for(int i=0; i<index; i++) {
+		pNode=pNode->next;
+	}
+	return pNode;
+}
 // ---------- Handle DauSach's structure function ------------
 int CompareDS(DauSach *a, DauSach *b, int mode) {//mode=0: so sanh theo the loai; else: so sanh theo ten
 	if(mode == 0) {
@@ -415,6 +423,19 @@ void SortDGByIndex(DocGia arr[]) {
 //	}while (1);
 //}
 
+int GetSoSachMuonDG(DocGia *docgia) {
+	int count=0;
+	NodeMuonTra *pNode=docgia->listMT->pFirst;
+	while(pNode) {
+		if(pNode->data.trangThai==0) {
+			count ++;
+		}
+		std::cout<<"\ncheck trang thai:"<<pNode->data.trangThai;
+		pNode=pNode->next;
+	}
+	return count;
+}
+
 NodeMuonTra *CreateNodeMT(MuonTra mt) {
 //	std::cout<<"\ncheck create nodeMT";
 	NodeMuonTra *pNode = new NodeMuonTra;
@@ -478,6 +499,19 @@ int LoadFileMuonTra(DocGia ListDG[]) {
 	FileIn.close();
 	std::cout<<"\ncheck load file muon tra: ";
 	return (count == readers ? readers : 1);
+}
+
+Date GetDate() {
+	Date resDate;
+	time_t now = time(0);
+	tm *ltm = localtime(&now);
+	resDate.nam=1900 + ltm->tm_year;
+	resDate.thang=1 + ltm->tm_mon;
+	resDate.ngay=ltm->tm_mday;
+	cout << "Year: " << 1900 + ltm->tm_year << endl;
+	cout << "Month: "<< 1 + ltm->tm_mon<< endl;
+	cout << "Day: "<<  ltm->tm_mday << endl;
+	return resDate;
 }
 ////------------------------ luu file --------------------------------
 //void DemDocGia(NodeDocGia *root, int &k) {

@@ -8,23 +8,24 @@
 //Thuoc tinh trong table
 char tableTitleDauSach[6][30] 	= {"ISBN", "Ten sach", "Trang", "Tac gia", "NXB", "The loai"};
 char tableTitleDocGia1[5][30] 	= {"Ma the", "Ho", "Ten", "Gioi tinh", "Trang thai"};
-char tableTitleMuonTra[4][30] 	= {"Ma sach", "Ten sach", "Ngay muon", "Ngay tra"};
+char tableTitleMuonTra[4][30] 	= {"Ma sach", "Ngay muon", "Ngay tra", "Trang thai"};
 char tableTitleDanhMuc[3][30] 	= {"Ma sach", "Trang thai", "Vi tri"};
 
 //Hoanh do cac thuoc tinh trong table
 int tableTitleWidthDauSach[6] 	= {80, 280, 70, 230, 90, TABLE_W-750-MG};
 int tableTitleWidthDocGia1[5] 	= {100, 300, 230, 120, TABLE_W-750-MG};
-int tableTitleWidthMuonTra[4] 	= {100, 300, 250, TABLE_W-650-MG};
+int tableTitleWidthMuonTra[4] 	= {120, 250, 250, TABLE_W-620-MG};
 int tableTitleWidthDanhMuc[3]	= {100, 300, TABLE_W-400-MG};
 
-//Trang thai cac thuoc tinh du lieu
+//Tung do trong bang ACTICLE
 int YDS[6] 						= {BLOCK*6, BLOCK*8, BLOCK*10, BLOCK*12, BLOCK*14, BLOCK*16};
+//Trang thai cac thuoc tinh du lieu
 enum TrangThaiSachThuVien{choMuonDuoc, daMuon, daThanhLy}; //choMuonDuoc = 0, daMuon = 1,daThanhLy = 2  
 enum TrangThaiSachMuonTra{dangMuon, daTra, lamMatSach}; // dang muon = 0; da tra = 1; lam mat sach = 2
 enum ModeSapXepDocGia{maDocGia, hoTen};
 enum TheLoaiSach{VanHoc, KinhTe, LichSu, TruyenTranh, GiaoTrinh, NgoaiNgu};
 
-char *MaSach[6]					= {"VH", "KT", "LS", "TT", "GT", "NN"};
+char MaSach[6][30]				= {"VH", "KT", "LS", "TT", "GT", "NN"};
 char TrangThaiSach[3][30] 		= {"CHO MUON DUOC", "DA CHO MUON", "DA THANH LY"};
 char TTMuonTra[3][30] 			= {"DANG MUON", "DA TRA", "LAM MAT"};
 char TTTDocGia[2][30] 			= {"KHOA", "HOAT DONG"};
@@ -39,9 +40,11 @@ char HieuChinhDauSach[] 		= "HIEU CHINH DAU SACH";
 char ThemSach[] 				= "THEM SACH: ";
 char ThemSachThanhCong[] 		= "THEM SACH THANH CONG!";
 char HieuChinhSachThanhCong[] 	= "HIEU CHINH SACH THANH CONG!";
+char MuonSachThanhCong[] 		= "MUON SACH THANH CONG!";
 char XoaDauSachThanhCong[]		= "XOA DAU SACH THANH CONG";
 char XoaSachThanhCong[]			= "XOA SACH THANH CONG";
 char KhongDuocXoaSachNay[]		= "KHONG DUOC XOA SACH NAY";
+char KhongDuocMuonSachNay[]		= "KHONG DUOC MUON SACH NAY";
 char KhongTimThaySach[]			= "KHONG TIM THAY SACH";
 char IsbnDaTonTai[]				= "ISBN DA TON TAI";
 char NamXuatBanKhongHopLe[]		= "NAM XUAT BAN KHONG HOP LE";

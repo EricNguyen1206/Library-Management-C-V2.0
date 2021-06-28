@@ -431,7 +431,6 @@ void PrintDMTable(ListDMS *listDMS, int begin, int end, int **MapId) {
 }
 
 void PrintSachMuonTable(int Pos, DocGia ListDG[], int **MapId) {
-	std::cout << "\ncheck ham in Sach muon";
 	int X;
 	int Y=HEADER+BLOCK+MG;
 //	int soluong=ListDG[Pos]->listMT.
@@ -439,33 +438,30 @@ void PrintSachMuonTable(int Pos, DocGia ListDG[], int **MapId) {
 	string date;
 	char buffer[33];
 	drawTable(MapId, tableTitleMuonTra, tableTitleWidthMuonTra, 4);
-    std::cout<<"\n check 4";
 	setcolor(0);
 	setbkcolor(MAIN_COLOR);
 	settextstyle(TEXT_FONT, 0, 2);
 	while(pNode!=NULL) {
-    	std::cout<<"\n check 5";
 		X=ACTICLE+MG*2;
 		outtextxy(X, Y, pNode->data.maSach.c_str());
+		std::cout << "\ncheck ma sach: "<<pNode->data.maSach;
 		date = (
 			string(itoa(pNode->data.ngayMuon.ngay, buffer, 10)) + "/" 
 			+ string(itoa(pNode->data.ngayMuon.thang, buffer, 10)) + "/" 
 			+ string(itoa(pNode->data.ngayMuon.nam, buffer, 10))
 		);
-        std::cout<<"\n check 5.1";
 		outtextxy(X+=tableTitleWidthMuonTra[0], Y, date.c_str());
 		date = (
 			string(itoa(pNode->data.ngayTra.ngay, buffer, 10)) + "/" 
 			+ string(itoa(pNode->data.ngayTra.thang, buffer, 10)) + "/" 
 			+ string(itoa(pNode->data.ngayTra.nam, buffer, 10))
 		);
-        std::cout<<"\n check 5.2";
 		outtextxy(X+=tableTitleWidthMuonTra[1], Y, date.c_str());
 		outtextxy(X+=tableTitleWidthMuonTra[2], Y, TTMuonTra[pNode->data.trangThai]);
 		Y+=BLOCK;
 		pNode=pNode->next;
 	}
-	std::cout<<"\n check 6";
+	std::cout << "\ncheck ham in Sach muon";
 }
 
 void printMapId(int **MapId) {
