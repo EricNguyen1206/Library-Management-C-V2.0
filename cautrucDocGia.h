@@ -37,7 +37,7 @@ struct DanhSachDauSach{
 	DauSach *dsDauSach[MAXDAUSACH];
 };
 
-DanhSachDauSach ArrDauSach;
+//DanhSachDauSach ArrDauSach;
 //std::cout<<"\ncheck load file dau sach "<<LoadFileDauSach(ArrDauSach);
 //std::cout<<"\ncheck load file danh muc"<<LoadFileDanhMucSach(ArrDauSach);
 // ---------- Muon Tra ------------

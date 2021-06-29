@@ -86,7 +86,7 @@ ListDMS* CreateListDMS(char ISBN[], string vitri, int n) {
 	std::cout<<"\ncheck init listdms";
 	danhMucSach *dms;
 	std::cout<<"\ncheck dms";
-	char buffer[33];
+	char buffer[30];
 	char MaSach[10];
 	int index;
 	std::cout<<"\ncheck n: "<<n;
@@ -206,7 +206,7 @@ int LoadFileDauSach(DanhSachDauSach &ArrDauSach) {
 		FileIn >> dausach->luotMuon;//8
 		i+=InsertDauSach(ArrDauSach, dausach);
 	}
-	i-=2;
+//	i-=2;
 	std::cout<<"\ncheck doc du lieu i cuoi: "<<i<<" len cuoi="<<len;
 	FileIn.close();
 	return (i==len ? len : 0);
@@ -296,7 +296,31 @@ DauSach *SearchIsbn(DanhSachDauSach dsds, char ISBN[]) {
 	}
 }
 
-int SoLuongDocGia = 0;
+bool CheckTrungMax(DauSach *ArrDS[], int lenArr, char isbn[]) {
+	
+	for(int i=0; i<lenArr; i++) {
+		if(strcmp(ArrDS[i]->ISBN, isbn)==0) {
+			std::cout<<"\ncheck so sanh false";
+			return false;
+		}
+	}
+	std::cout<<"\ncheck so sanh true";
+	return true;
+}
+
+void GetTopTenDauSach(DanhSachDauSach dsds, DauSach *ArrDS[]) {
+	int i, j, n=dsds.n;
+	for(i=0; i<10; i++) {
+		DauSach *max = dsds.dsDauSach[0];
+		for(j=0; j<n; j++) {
+			if(max->luotMuon<dsds.dsDauSach[j]->luotMuon && CheckTrungMax(ArrDS, i, dsds.dsDauSach[j]->ISBN)) {
+				max=dsds.dsDauSach[j];
+			}
+		}
+		ArrDS[i]=max;
+	}
+	std::cout<<"\ncheck get top ten";
+}
 // ---------- Handle DocGia's structure function ------------
 int LoadFileTheDocGia(Tree &Root) {
 	std::ifstream FileIn;
@@ -430,7 +454,7 @@ int GetSoSachMuonDG(DocGia *docgia) {
 		if(pNode->data.trangThai==0) {
 			count ++;
 		}
-		std::cout<<"\ncheck trang thai:"<<pNode->data.trangThai;
+//		std::cout<<"\ncheck trang thai:"<<pNode->data.trangThai;
 		pNode=pNode->next;
 	}
 	return count;
@@ -448,20 +472,20 @@ void InsertLastListMuonTra(ListMT *&listMT, MuonTra mt) {
 	NodeMuonTra *pNode = listMT->pFirst;
 	if(listMT->pFirst == NULL) {
 		listMT->pFirst = pInsert;
-		std::cout<<"\ncheck node sach dau:"<<pInsert->data.maSach;
+//		std::cout<<"\ncheck node sach dau:"<<pInsert->data.maSach;
 		return;
 	}
 	while(pNode->next != NULL) {
 		pNode = pNode->next;
 	}
 	pNode->next = pInsert;
-	std::cout<<"\ncheck node sach:"<<pInsert->data.maSach;
+//	std::cout<<"\ncheck node sach:"<<pInsert->data.maSach;
 }
 
 int FindIndexDocGiaInArr(DocGia ListDG[], int mathe) {
 	for(int i=0; i<MAXDOCGIA; i++) {
 		if(ListDG[i].MATHE==mathe) {
-			std::cout<<"\ncheck find id doc gia: "<<mathe<<", vi tri:"<<i;
+//			std::cout<<"\ncheck find id doc gia: "<<mathe<<", vi tri:"<<i;
 			return i;
 		}
 	}
@@ -484,7 +508,7 @@ int LoadFileMuonTra(DocGia ListDG[]) {
 		FileIn >> soSachMuon;
 		listMuonTra = new ListMT;
 		listMuonTra->pFirst = NULL;
-		std::cout<<"\nDoc gia "<<maDocGia<<" co "<<soSachMuon<<" sach dang muon:";
+//		std::cout<<"\nDoc gia "<<maDocGia<<" co "<<soSachMuon<<" sach dang muon:";
 		for(int i=0; i<soSachMuon; i++) {
 			FileIn.ignore();
 			getline(FileIn, mt.maSach);
@@ -499,6 +523,15 @@ int LoadFileMuonTra(DocGia ListDG[]) {
 	FileIn.close();
 	std::cout<<"\ncheck load file muon tra: ";
 	return (count == readers ? readers : 1);
+}
+
+//void DeleteSachMuon()
+NodeMuonTra *GetNodeMTById(ListMT *listMT, int index) {
+	NodeMuonTra *pNode=listMT->pFirst;
+	for(int i=0; i<index; i++) {
+		pNode=pNode->next;
+	}
+	return pNode;
 }
 
 Date GetDate() {

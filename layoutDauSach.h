@@ -10,6 +10,7 @@ int DauSachController(int **MapId, int &x, int &y) {
 	
 	refreshMainLayout(MapId);
 	drawHeader(MapId, 1);
+	DanhSachDauSach ArrDauSach;
 	std::cout<<"\ncheck load file dau sach "<<LoadFileDauSach(ArrDauSach);
 	std::cout<<"\ncheck load file danh muc"<<LoadFileDanhMucSach(ArrDauSach);
 	int mode=0, begin=0, end, pos;//mode = 0: mac dinh,mode = 1: tim kiem 

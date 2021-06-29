@@ -8,13 +8,17 @@
 int MuonTraController(int **MapId, int &x, int &y) {
 	refreshMainLayout(MapId);
 	drawHeader(MapId, 3);
+	DanhSachDauSach ArrDauSach;
+	DauSach *ArrTopTen[10];
 	std::cout<<"\ncheck load file dau sach "<<LoadFileDauSach(ArrDauSach);
 	std::cout<<"\ncheck load file danh muc"<<LoadFileDanhMucSach(ArrDauSach);
+	GetTopTenDauSach(ArrDauSach, ArrTopTen);
 	int lenDG=0, currentID=-1, currentPos=-1, sachMuon;
 	char buffer[30];
 	DauSach *currentDS;
 	DocGia ListDG[MAXDOCGIA], *currentDG;
 	NodeDMS *currentNodeDMS;
+	NodeMuonTra *currentNodeMT;
 	MuonTra mt;
 	CreateDocGiaArr(CayDocGia, ListDG, lenDG);
 	std::cout<<"\ncheck lenDG:"<<lenDG;
@@ -26,8 +30,10 @@ int MuonTraController(int **MapId, int &x, int &y) {
 	Button btnSearchDocGia(ACTICLE-BLOCK-MG*3, YDS[0], BLOCK+MG*2, BLOCK, "Tim", 304);
 	Button btnRefreash(ACTICLE-BLOCK-MG*3, YDS[0], BLOCK+MG*2, BLOCK, "Xoa", 305);
 	Button btnSearchDauSach(ACTICLE-BLOCK-MG*3, YDS[5], BLOCK+MG*2, BLOCK, "Tim", 306);
-	Button btnConfirm(BLOCK*4, h-BLOCK*2+MG, BLOCK*4, BLOCK, "Xac Nhan", 307);
+	Button btnXacNhanMuon(BLOCK*4, h-BLOCK*2+MG, BLOCK*4, BLOCK, "Xac Nhan", 307);
 	Button btnChangeDS(ACTICLE-BLOCK-MG*3, YDS[5], BLOCK+MG*2, BLOCK, "Xoa", 308);
+	Button btnXacNhanTra(BLOCK, h-BLOCK*2+MG, BLOCK*4, BLOCK, "Tra sach", 320);
+	Button btnLamMat(BLOCK*7, h-BLOCK*2+MG, BLOCK*4, BLOCK, "Lam mat", 321);
 	
 	EditText edSearchDocGia(MG*2, YDS[0], BLOCK*6, BLOCK, "Nhap ma the :", "", "Nhap vao 4 so", 310);
 	EditText edNameDocGia(BLOCK, YDS[1], BLOCK*7-MG, BLOCK, "Doc gia :", "", "", 311);
@@ -96,13 +102,13 @@ int MuonTraController(int **MapId, int &x, int &y) {
             		sachMuon = GetSoSachMuonDG(currentDG);
             		std::cout<<"\ncheck sach muon:"<<sachMuon;
             		if(sachMuon>=3 || currentDG->trangthai==0 || currentNodeDMS->data.TrangThai!=0) {
-            			btnConfirm.isLock=true;
+            			btnXacNhanMuon.isLock=true;
             			std::cout<<"\ncheck 1";
 					} else {
-						btnConfirm.isLock=false;
+						btnXacNhanMuon.isLock=false;
 						std::cout<<"\ncheck 2";
 					}
-            		btnConfirm.draw(MapId);
+            		btnXacNhanMuon.draw(MapId);
             		break;
             	case 200:
             		return 2;
@@ -131,9 +137,15 @@ int MuonTraController(int **MapId, int &x, int &y) {
 					if(btnMuonSach.isChoose) {
 						btnTopTen.isChoose=true;
 						btnTopTen.draw(MapId);
+						ViewTopTenDauSachTable(ArrTopTen, MapId);
 					}
             		break;
             	case 304:// tim thong tin theo ma doc gia nhap vao
+            		if(edSearchDocGia.content[3]=='\0') {
+            			drawNotification(VuiLongNhapLai);
+            			break;
+					}
+					drawNotification();
             		btnSearchDocGia.deleteBtn(MAIN_COLOR, MapId);
             		btnRefreash.draw(MapId);
             		currentID=atoi(edSearchDocGia.content);
@@ -155,7 +167,7 @@ int MuonTraController(int **MapId, int &x, int &y) {
 					edMaTheDocGia.draw(MapId);
             		std::cout<<"\n check 2";
             		if(btnTraSach.isChoose) {
-            			PrintSachMuonTable(currentPos, ListDG, MapId);
+            			PrintSachMuonTable(ListDG[currentPos], MapId);
 					}
             		
             		std::cout<<"\n check 3";
@@ -197,9 +209,12 @@ int MuonTraController(int **MapId, int &x, int &y) {
 					PrintDMTable(currentDS->listDMS, 0, 10,MapId);
             		break;
             	case 307://btn xac nhan
-            		btnConfirm.deleteBtn(MAIN_COLOR, MapId);
+            		if(btnXacNhanMuon.isLock) {
+            			break;
+					}
+            		btnXacNhanMuon.deleteBtn(BG_COLOR, MapId);
             		if(btnMuonSach.isChoose) {
-            			if(btnConfirm.isLock) {
+            			if(btnXacNhanMuon.isLock) {
             				drawNotification(KhongDuocMuonSachNay);
             				break;
 						}
@@ -228,11 +243,47 @@ int MuonTraController(int **MapId, int &x, int &y) {
 				case 315://nhap isbn sach can tim
 					ScanNumber(edSearchISBN, 5, MapId);
 					
-//					btnConfirm.draw(MapId);
+//					btnXacNhanMuon.draw(MapId);
 					break;
 				case 316:
 					break;
 				case 317:
+					break;
+				case 320:
+					btnXacNhanTra.deleteBtn(BG_COLOR, MapId);
+					btnLamMat.deleteBtn(BG_COLOR, MapId);
+					drawNotification(TraSachThanhCong);
+					currentNodeDMS->data.TrangThai=0;
+					currentNodeMT->data.trangThai=1;
+					PrintSachMuonTable(ListDG[currentPos], MapId);
+					break;
+				case 321:
+					btnXacNhanTra.deleteBtn(BG_COLOR, MapId);
+					btnLamMat.deleteBtn(BG_COLOR, MapId);
+					drawNotification();
+					currentNodeDMS->data.TrangThai=2;
+					currentNodeMT->data.trangThai=2;
+					PrintSachMuonTable(ListDG[currentPos], MapId);
+					break;
+				case 330:
+				case 331:
+				case 332:
+				case 333:
+				case 334:
+				case 335:
+				case 336:
+				case 337:
+				case 338:
+				case 339:
+				case 340:
+				case 341:
+				case 342:
+					currentNodeMT=GetNodeMTById(currentDG->listMT, MapId[y][x]-330);
+					
+					strcpy(edMaSachMuon.content, currentNodeMT->data.maSach.c_str());
+					edMaSachMuon.draw(MapId);
+					btnXacNhanTra.draw(MapId);
+					btnLamMat.draw(MapId);
 					break;
 			}
 			

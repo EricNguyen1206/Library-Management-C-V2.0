@@ -361,7 +361,7 @@ void PrintDGTable(DocGia *ListDG, int begin, int end, int **MapId) {
 	settextstyle(TEXT_FONT, 0, 2);
 	for(int i=begin; i<end; i++) {
 		X=ACTICLE+MG*2;
-		char buffer [33];
+		char buffer [30];
 		itoa(ListDG[i].MATHE, buffer, 10);
 		outtextxy(X, Y, buffer);
 		outtextxy(X+=100, Y, ListDG[i].ho.c_str());
@@ -390,7 +390,7 @@ void PrintDSTable(DanhSachDauSach ArrDauSach, int begin, int end, int **MapId) {
 		pointerDS=new DauSach;
 		pointerDS=ArrDauSach.dsDauSach[i];
 		X=ACTICLE+MG*2;
-		char buffer [33];
+		char buffer [30];
 		outtextxy(X, Y, pointerDS->ISBN);
 		outtextxy(X+=80, Y, pointerDS->tenSach.c_str());
 		itoa(pointerDS->soTrang, buffer, 10);
@@ -430,19 +430,21 @@ void PrintDMTable(ListDMS *listDMS, int begin, int end, int **MapId) {
 	}
 }
 
-void PrintSachMuonTable(int Pos, DocGia ListDG[], int **MapId) {
+void PrintSachMuonTable(DocGia docgia, int **MapId) {
 	int X;
 	int Y=HEADER+BLOCK+MG;
-//	int soluong=ListDG[Pos]->listMT.
-	NodeMuonTra *pNode=ListDG[Pos].listMT->pFirst;
+	NodeMuonTra *pNode=docgia.listMT->pFirst;
+//	NodeMuonTra *pNode=ListDG[Pos].listMT->pFirst;
 	string date;
-	char buffer[33];
+	char buffer[30];
 	drawTable(MapId, tableTitleMuonTra, tableTitleWidthMuonTra, 4);
 	setcolor(0);
 	setbkcolor(MAIN_COLOR);
 	settextstyle(TEXT_FONT, 0, 2);
+	int count=0;
 	while(pNode!=NULL) {
 		X=ACTICLE+MG*2;
+		setId(MapId, X, Y, TABLE_W, BLOCK, 330+count);
 		outtextxy(X, Y, pNode->data.maSach.c_str());
 		std::cout << "\ncheck ma sach: "<<pNode->data.maSach;
 		date = (
@@ -459,10 +461,39 @@ void PrintSachMuonTable(int Pos, DocGia ListDG[], int **MapId) {
 		outtextxy(X+=tableTitleWidthMuonTra[1], Y, date.c_str());
 		outtextxy(X+=tableTitleWidthMuonTra[2], Y, TTMuonTra[pNode->data.trangThai]);
 		Y+=BLOCK;
+		count++;
 		pNode=pNode->next;
 	}
 	std::cout << "\ncheck ham in Sach muon";
 }
+
+void ViewTopTenDauSachTable(DauSach *ArrTopTen[], int **MapId) {
+	int X;
+	int Y=HEADER+BLOCK+MG;
+	char buffer[30];
+	DauSach *dausach;
+	drawTable(MapId, tableTitleDauSach, tableTitleWidthDauSach, 6);
+	setcolor(0);
+	setbkcolor(MAIN_COLOR);
+	settextstyle(TEXT_FONT, 0, 2);
+	int count=0;
+	for(int i=0; i<10; i++) {
+		X=ACTICLE+MG*2;
+		dausach=new DauSach;
+		dausach=ArrTopTen[i];
+		outtextxy(X, Y, dausach->ISBN);
+		outtextxy(X+=tableTitleWidthDauSach[0], Y, dausach->tenSach.c_str());
+		itoa(dausach->soTrang, buffer, 10);
+		outtextxy(X+=tableTitleWidthDauSach[1], Y, buffer);
+		outtextxy(X+=tableTitleWidthDauSach[2], Y, dausach->tacGia.c_str());
+		itoa(dausach->namXuatBan, buffer, 10);
+		outtextxy(X+=tableTitleWidthDauSach[3], Y, buffer);
+		outtextxy(X+=tableTitleWidthDauSach[4], Y, dausach->theLoai.c_str());
+		setId(MapId, ACTICLE+MG, Y, TABLE_W, BLOCK, 350+i);
+		Y+=BLOCK;
+	}
+	std::cout << "\ncheck ham in Top 10 DS";
+} 
 
 void printMapId(int **MapId) {
 	for(int i=0; i<h; i+=38) {
