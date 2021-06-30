@@ -8,18 +8,17 @@
 int MuonTraController(int **MapId, int &x, int &y) {
 	refreshMainLayout(MapId);
 	drawHeader(MapId, 3);
-	DanhSachDauSach ArrDauSach;
-	DauSach *ArrTopTen[10];
-	std::cout<<"\ncheck load file dau sach "<<LoadFileDauSach(ArrDauSach);
-	std::cout<<"\ncheck load file danh muc"<<LoadFileDanhMucSach(ArrDauSach);
-	GetTopTenDauSach(ArrDauSach, ArrTopTen);
 	int lenDG=0, currentID=-1, currentPos=-1, sachMuon;
 	char buffer[30];
-	DauSach *currentDS;
 	DocGia ListDG[MAXDOCGIA], *currentDG;
 	NodeDMS *currentNodeDMS;
 	NodeMuonTra *currentNodeMT;
 	MuonTra mt;
+	DanhSachDauSach ArrDauSach;
+	DauSach *ArrTopTen[10], *currentDS;
+	std::cout<<"\ncheck load file dau sach "<<LoadFileDauSach(ArrDauSach);
+	std::cout<<"\ncheck load file danh muc"<<LoadFileDanhMucSach(ArrDauSach);
+	GetTopTenDauSach(ArrDauSach, ArrTopTen);
 	CreateDocGiaArr(CayDocGia, ListDG, lenDG);
 	std::cout<<"\ncheck lenDG:"<<lenDG;
 	std::cout<<LoadFileMuonTra(ListDG);
@@ -80,7 +79,7 @@ int MuonTraController(int **MapId, int &x, int &y) {
             	case 143:
             	case 144:
             	case 145:
-            	case 146:
+            	case 146://ckick vao cac sach trong table danh muc sach
             	case 147:
             	case 148:
             	case 149:
@@ -95,6 +94,7 @@ int MuonTraController(int **MapId, int &x, int &y) {
             		strcpy(edTenSachMuon.content, currentDS->tenSach.c_str());
             		strcpy(edMaSachMuon.content, currentNodeDMS->data.MaSach);
             		
+            		drawNotification();
             		edTenSachMuon.draw(MapId);
             		edMaSachMuon.draw(MapId);
             		btnChangeDS.draw(MapId);
@@ -114,6 +114,7 @@ int MuonTraController(int **MapId, int &x, int &y) {
             		return 2;
             	case 301:
             		drawNotification();
+            		btnTopTen.draw(MapId);
             		btnMuonSach.toggle(btnTraSach, MapId);
             		edSearchISBN.draw(MapId);
             		btnSearchDauSach.draw(MapId);
@@ -123,6 +124,7 @@ int MuonTraController(int **MapId, int &x, int &y) {
             		drawNotification();
             		edSearchISBN.deleteEdText(MAIN_COLOR, MapId);
             		btnSearchDauSach.deleteBtn(MAIN_COLOR, MapId);
+            		btnTopTen.deleteBtn(BG_COLOR, MapId);
 					edMaTheDocGia.draw(MapId);
             		edNameDocGia.draw(MapId);
 					edGioiTinhDocGia.draw(MapId);
@@ -146,6 +148,8 @@ int MuonTraController(int **MapId, int &x, int &y) {
             			break;
 					}
 					drawNotification();
+					btnTopTen.isChoose=false;
+					btnTopTen.draw(MapId);
             		btnSearchDocGia.deleteBtn(MAIN_COLOR, MapId);
             		btnRefreash.draw(MapId);
             		currentID=atoi(edSearchDocGia.content);
@@ -206,7 +210,7 @@ int MuonTraController(int **MapId, int &x, int &y) {
 						break;
 					}
 					std::cout<<"\nCheck so luong khi in: "<<currentDS->soLuong;
-					PrintDMTable(currentDS->listDMS, 0, 10,MapId);
+					PrintDMTable(currentDS->listDMS, 0, currentDS->soLuong,MapId);
             		break;
             	case 307://btn xac nhan
             		if(btnXacNhanMuon.isLock) {
@@ -225,6 +229,7 @@ int MuonTraController(int **MapId, int &x, int &y) {
 						mt.trangThai=0;
 						InsertLastListMuonTra(currentDG->listMT, mt);
 					}
+					PrintDMTable(currentDS->listDMS, 0, currentDS->soLuong,MapId);
             		break;
             	case 310:
             		btnRefreash.deleteBtn(MAIN_COLOR, MapId);
@@ -255,6 +260,7 @@ int MuonTraController(int **MapId, int &x, int &y) {
 					drawNotification(TraSachThanhCong);
 					currentNodeDMS->data.TrangThai=0;
 					currentNodeMT->data.trangThai=1;
+					currentNodeMT->data.ngayTra=GetDate();
 					PrintSachMuonTable(ListDG[currentPos], MapId);
 					break;
 				case 321:
@@ -263,6 +269,7 @@ int MuonTraController(int **MapId, int &x, int &y) {
 					drawNotification();
 					currentNodeDMS->data.TrangThai=2;
 					currentNodeMT->data.trangThai=2;
+					currentNodeMT->data.ngayTra=GetDate();
 					PrintSachMuonTable(ListDG[currentPos], MapId);
 					break;
 				case 330:
@@ -272,18 +279,34 @@ int MuonTraController(int **MapId, int &x, int &y) {
 				case 334:
 				case 335:
 				case 336:
-				case 337:
+				case 337://click vao lich su muon tra cua doc gia
 				case 338:
 				case 339:
 				case 340:
 				case 341:
 				case 342:
 					currentNodeMT=GetNodeMTById(currentDG->listMT, MapId[y][x]-330);
-					
+					drawNotification();
+					if(currentNodeMT->data.trangThai!=0) {
+						break;
+					}
 					strcpy(edMaSachMuon.content, currentNodeMT->data.maSach.c_str());
 					edMaSachMuon.draw(MapId);
 					btnXacNhanTra.draw(MapId);
 					btnLamMat.draw(MapId);
+					break;
+				case 350:
+				case 351:
+				case 352:
+				case 353:
+				case 354:
+				case 355:
+				case 356:
+				case 357:
+				case 358:
+				case 359:
+					currentDS=ArrTopTen[MapId[y][x]-350];
+					PrintDMTable(currentDS->listDMS, 0, 10, MapId);
 					break;
 			}
 			
