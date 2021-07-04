@@ -40,3 +40,4 @@ const int MAXDOCGIA 		= 1000;
 const int NGAYQUAHAN 		= 7;
 const int MAXSACHMUON 		= 3;
 
+const int monthDays[12] 	= { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };

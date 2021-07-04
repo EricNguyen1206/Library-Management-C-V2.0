@@ -6,12 +6,14 @@
 //#include "model1.h"
 
 //Thuoc tinh trong table
+char tableTitleQuaHan1[6][30] 	= {"Ma the", "Ho", "Ten", "Gioi tinh", "Trang thai", "So ngay qua han"};
 char tableTitleDauSach[6][30] 	= {"ISBN", "Ten sach", "Trang", "Tac gia", "NXB", "The loai"};
 char tableTitleDocGia1[5][30] 	= {"Ma the", "Ho", "Ten", "Gioi tinh", "Trang thai"};
 char tableTitleMuonTra[4][30] 	= {"Ma sach", "Ngay muon", "Ngay tra", "Trang thai"};
 char tableTitleDanhMuc[3][30] 	= {"Ma sach", "Trang thai", "Vi tri"};
 
 //Hoanh do cac thuoc tinh trong table
+int tableTitleWidthQuaHan1[6] 	= {80, 220, 150, 110, 150, TABLE_W-700-MG};
 int tableTitleWidthDauSach[6] 	= {80, 280, 70, 230, 90, TABLE_W-750-MG};
 int tableTitleWidthDocGia1[5] 	= {100, 300, 230, 120, TABLE_W-750-MG};
 int tableTitleWidthMuonTra[4] 	= {120, 250, 250, TABLE_W-620-MG};
@@ -37,6 +39,8 @@ char AppTitle[] 				= "QUAN LY THU VIEN";
 char DauSachTitle[] 			= "DANH SACH DAU SACH";
 char ThemDauSach[] 				= "THEM DAU SACH";
 char HieuChinhDauSach[] 		= "HIEU CHINH DAU SACH";
+char InforProjectTitle[]		= "THONG TIN DO AN";
+char ExitApplication[]			= "THOAT CHUONG TRINH";
 char ThemSach[] 				= "THEM SACH: ";
 char ThemSachThanhCong[] 		= "THEM SACH THANH CONG!";
 char HieuChinhSachThanhCong[] 	= "HIEU CHINH SACH THANH CONG!";

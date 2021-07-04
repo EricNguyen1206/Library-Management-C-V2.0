@@ -27,8 +27,15 @@ int main(int argc, char *argv[])
 	Button btnRouteDauSach(w/2-BLOCK*5, BLOCK*3, BLOCK*10, BLOCK*2, DauSachTitle, 1);
 	Button btnRouteDocGia(w/2-BLOCK*5, BLOCK*6, BLOCK*10, BLOCK*2, DocGiaTitle, 2);
 	Button btnRouteMuonTra(w/2-BLOCK*5, BLOCK*9, BLOCK*10, BLOCK*2, MuonTraTitle, 3);
+	Button btnInfoProject(w/2-BLOCK*5, BLOCK*12, BLOCK*10, BLOCK*2, InforProjectTitle, 4);
+	Button btnExitApp(w/2-BLOCK*5, BLOCK*15, BLOCK*10, BLOCK*2, ExitApplication, 5)
 	
 	drawStartScreen(btnRouteDauSach, btnRouteDocGia, btnRouteMuonTra, MapId);
+	
+	std::cout<<"\ncheck load file the doc gia: "<<LoadFileTheDocGia(CayDocGia);
+	std::cout<<"\ncheck load file dau sach: "<<LoadFileDauSach(ArrDauSach);
+	std::cout<<"\ncheck load file danh muc: "<<LoadFileDanhMucSach(ArrDauSach);
+	std::cout<<"\ncheck load file the doc gia: "<<LoadFileTheDocGia(CayDocGia);
 	int Router;
 	
 	while(1) {
@@ -44,6 +51,8 @@ int main(int argc, char *argv[])
             			goto label_2;
 					} else if(Router == 3) {
 						goto label_3;
+					} else if(Router == 5) {
+						goto label_5;
 					}
             		drawStartScreen(btnRouteDauSach, btnRouteDocGia, btnRouteMuonTra, MapId);
             		break;
@@ -66,17 +75,26 @@ int main(int argc, char *argv[])
             			goto label_1;
 					} else if(Router == 2) {
             			goto label_2;
+					} else if(Router == 5) {
+						goto label_5;
 					}
             		drawStartScreen(btnRouteDauSach, btnRouteDocGia, btnRouteMuonTra, MapId);
             		break;
+            	case 4:
+            		break;
+            	case 5:
+            		label_5:
+            		
+            		for(int i=0; i<h; i++) {
+						delete [] MapId[i];
+					}
+					delete [] MapId;
+            		exit(1);
+            		break;
 			}
-			
         }
 	}
-	for(int i=0; i<h; i++) {
-		delete [] MapId[i];
-	}
-	delete [] MapId;
+				
 	while(!kbhit()) delay(1);
 	return 0;
 }

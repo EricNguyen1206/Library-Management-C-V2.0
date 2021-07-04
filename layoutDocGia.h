@@ -10,13 +10,22 @@
 #include <stdlib.h>
 
 int DocGiaController(int **MapId, int &x, int &y) {
-	int lenDG=0, begin=0, end, mode=1, index;
-	int NewId;
+	int lenDG=0, begin=0, end, mode=1, index, NewId, soDocGiaMuonSach;
 	char buffer[30];
 	NodeBST *p = new NodeBST;
 	DocGia ListDG[MAXDOCGIA];
 	DocGia current;
+	ListDGQuaHan ListDGQH;
+	drawTable(MapId, tableTitleDocGia1, tableTitleWidthDocGia1, 5);
+	soDocGiaMuonSach = LoadFileMuonTra(CayDocGia);
+	std::cout<<"\ncheck load file muon tra"<<soDocGiaMuonSach;
 	CreateDocGiaArr(CayDocGia, ListDG, lenDG);
+	std::cout<<"\ncheck get list Qua han"<<GetListDGQuaHan(CayDocGia, ListDGQH);
+	SortListDFQuaHan(ListDGQH);
+	
+	std::cout<<"\ncheck 1:";
+	std::cout<<"\nCheck listDGQH:"<<ListDGQH.pFirst->data.MATHE;
+	
 //	lenDG--';
 	std::cout<<"\n lenDG:" << lenDG;
 	refreshMainLayout(MapId);
@@ -38,7 +47,9 @@ int DocGiaController(int **MapId, int &x, int &y) {
 	EditText edFirstName(BLOCK, YDS[2], BLOCK*7-MG, BLOCK, "Ten :","","", 213);
 	
 	Button btnConfirmThemDocGia(BLOCK*4, h-BLOCK*2+MG, BLOCK*4, BLOCK, "Xac nhan", 214);
-	Button btnXoaDocGia(MG, UNIT*3+MG*2, BLOCK*4, BLOCK, "Xoa", 216);
+	Button btnXoaDocGia(MG, UNIT*3+MG*2, BLOCK*4, BLOCK, "Xoa", 215);
+	Button btnListDGQuaHan(w-BLOCK*8-MG, UNIT*3+MG*2, BLOCK*4, BLOCK, "Qua han", 216);
+	Button btnTatCaDocGia(w-BLOCK*4-MG, UNIT*3+MG*2, BLOCK*4, BLOCK, "Tat ca", 217);
 	
 	btnBackMenu.draw(MapId);
 	btnExit.draw(MapId);
@@ -48,14 +59,16 @@ int DocGiaController(int **MapId, int &x, int &y) {
 	btnFilterId.draw(MapId);
 	btnFilterName.draw(MapId);
 	
-	drawTable(MapId, tableTitleDocGia1, tableTitleWidthDocGia1, 5);
 	end = (lenDG>=13) ? 13 : lenDG;
 	SortDG(ListDG, lenDG, maDocGia);
 	std::cout << "\nbegin:"<<begin<<" end:"<<end;
-	PrintDGTable(ListDG, begin , end, MapId);
+	ViewDGTable(ListDG, begin , end, MapId);
 	btnBackTable.isLock=true;
 	btnBackTable.draw(MapId);
 	btnNextTable.draw(MapId);
+	btnTatCaDocGia.isChoose=true;
+	btnListDGQuaHan.draw(MapId);
+	btnTatCaDocGia.draw(MapId);
 	while(1) {
 		delay(0.0001);
         if (ismouseclick(WM_LBUTTONDOWN)){
@@ -63,10 +76,16 @@ int DocGiaController(int **MapId, int &x, int &y) {
             std::cout<<"\nleft click:"<<x<<" "<<y<<"="<<MapId[y][x];
             switch(MapId[y][x]) {
             	case -1:
+            		SaveFileDanhSachMuonTra(CayDocGia, soDocGiaMuonSach);
+            		SaveFileDocGia(CayDocGia);
             		return 0;
             	case -2:
+            		SaveFileDanhSachMuonTra(CayDocGia, soDocGiaMuonSach);
+            		SaveFileDocGia(CayDocGia);
             		exit(1);
             	case 100:
+            		SaveFileDanhSachMuonTra(CayDocGia, soDocGiaMuonSach);
+            		SaveFileDocGia(CayDocGia);
             		return 1;
 				case 201:
 					if(!(btnThemDocGia.isLock || btnThemDocGia.isChoose)) {
@@ -102,7 +121,7 @@ int DocGiaController(int **MapId, int &x, int &y) {
 						ListDG[index].phai=btnGenderMale.isChoose?0:1;
 						ListDG[index].trangthai=btnConditionBlocked.isChoose?0:1;
 						refreshTable(MapId, tableTitleWidthDocGia1, 5);
-						PrintDGTable(ListDG, begin, end, MapId);
+						ViewDGTable(ListDG, begin, end, MapId);
 						btnConditionBlocked.deleteBtn(MAIN_COLOR, MapId);
 	            		btnConditionActive.deleteBtn(MAIN_COLOR, MapId);
 						btnDieuChinhDocGia.deleteBtn(BG_COLOR, MapId);
@@ -126,7 +145,7 @@ int DocGiaController(int **MapId, int &x, int &y) {
 						mode=maDocGia;
 						SortDG(ListDG, lenDG, mode);
 	            		refreshTable(MapId, tableTitleWidthDocGia1, 5);
-						PrintDGTable(ListDG, begin, end, MapId);
+						ViewDGTable(ListDG, begin, end, MapId);
 					}
 					break;
 				case 204:
@@ -136,7 +155,7 @@ int DocGiaController(int **MapId, int &x, int &y) {
 						mode=hoTen;
 						SortDG(ListDG, lenDG, mode);
 	            		refreshTable(MapId, tableTitleWidthDocGia1, 5);
-						PrintDGTable(ListDG, begin, end, MapId);
+						ViewDGTable(ListDG, begin, end, MapId);
 					}
 					break;
 				case 205:
@@ -150,7 +169,7 @@ int DocGiaController(int **MapId, int &x, int &y) {
 						}
 						refreshTable(MapId, tableTitleWidthDocGia1, 5);
 //						PrintDocGiaTable(CayDocGia, begin, end, index, MapId);
-						PrintDGTable(ListDG, begin , end, MapId);
+						ViewDGTable(ListDG, begin , end, MapId);
 						btnNextTable.isLock = false;
 						btnNextTable.draw(MapId);
 					} 
@@ -167,7 +186,7 @@ int DocGiaController(int **MapId, int &x, int &y) {
 						else end+=13;
 						refreshTable(MapId, tableTitleWidthDocGia1, 5);
 //						PrintDocGiaTable(CayDocGia, begin, end, index, MapId);
-						PrintDGTable(ListDG, begin , end, MapId);
+						ViewDGTable(ListDG, begin , end, MapId);
 						btnBackTable.isLock = false;
 						btnBackTable.draw(MapId);
 					} else {
@@ -252,7 +271,7 @@ int DocGiaController(int **MapId, int &x, int &y) {
             			mode = btnFilterId.isChoose ? 0 : 1;
             			SortDG(ListDG, lenDG, mode);
 	            		refreshTable(MapId, tableTitleWidthDocGia1, 5);
-	            		PrintDGTable(ListDG, begin, end, MapId);
+	            		ViewDGTable(ListDG, begin, end, MapId);
 						btnConfirmThemDocGia.deleteBtn(BG_COLOR, MapId);
 						btnConditionBlocked.deleteBtn(MAIN_COLOR, MapId);
 	            		btnConditionActive.deleteBtn(MAIN_COLOR, MapId);
@@ -271,7 +290,7 @@ int DocGiaController(int **MapId, int &x, int &y) {
 	            		lenDG++;
 					}
             		break;
-            	case 216:
+            	case 215:
             		end-=(end%13==0&&end!=lenDG)?0:1;
             		std::cout<<DeleteNodeBST(CayDocGia, p);
             		lenDG=0;
@@ -282,7 +301,7 @@ int DocGiaController(int **MapId, int &x, int &y) {
         			mode = btnFilterId.isChoose ? 0 : 1;
         			SortDG(ListDG, lenDG, mode);
             		refreshTable(MapId, tableTitleWidthDocGia1, 5);
-	            	PrintDGTable(ListDG, begin, end, MapId);
+	            	ViewDGTable(ListDG, begin, end, MapId);
 					btnConditionBlocked.deleteBtn(MAIN_COLOR, MapId);
             		btnConditionActive.deleteBtn(MAIN_COLOR, MapId);
 					btnDieuChinhDocGia.deleteBtn(BG_COLOR, MapId);
@@ -298,6 +317,22 @@ int DocGiaController(int **MapId, int &x, int &y) {
             		edFirstName.clear();
             		edLastName.clear();
             		edIdCard.clear();
+            		break;
+            	case 216:
+            		btnListDGQuaHan.toggle(btnTatCaDocGia, MapId);
+            		btnFilterId.deleteBtn(BG_COLOR, MapId);
+            		btnFilterName.deleteBtn(BG_COLOR, MapId);
+            		btnNextTable.deleteBtn(BG_COLOR, MapId);
+            		btnBackTable.deleteBtn(BG_COLOR, MapId);
+            		ViewDocGiaQuaHan(ListDGQH, MapId);
+            		break;
+            	case 217:
+            		btnTatCaDocGia.toggle(btnListDGQuaHan, MapId);
+            		btnFilterId.draw(MapId);
+            		btnFilterName.draw(MapId);
+            		btnNextTable.draw(MapId);
+            		btnBackTable.draw(MapId);
+            		ViewDGTable(ListDG, begin , end, MapId);
             		break;
             	case 230:
             	case 231:
@@ -350,6 +385,8 @@ int DocGiaController(int **MapId, int &x, int &y) {
 					btnConditionBlocked.draw(MapId);
             		break;
             	case 300:
+            		SaveFileDanhSachMuonTra(CayDocGia, soDocGiaMuonSach);
+            		SaveFileDocGia(CayDocGia);
             		return 3;
 			}
 			

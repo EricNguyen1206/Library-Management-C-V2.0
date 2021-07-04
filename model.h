@@ -52,9 +52,9 @@ struct Button{
 	}
 	
 	void deleteBtn(int color, int **MapId) {
-		this->isLock=false;
-		this->isHover=false;
-		this->isChoose=false;
+//		this->isLock=false;
+//		this->isHover=false;
+//		this->isChoose=false;
 		setfillstyle(1, color);
 		bar(this->x, this->y, this->x+this->width+1, this->y+this->height+1);
 		setId(MapId, this->x, this->y, this->width, this->height, 0);
@@ -351,11 +351,12 @@ void drawTable(int **MapId, char title[][30], int widthArr[], int colNum) {
 }
 
 
-void PrintDGTable(DocGia *ListDG, int begin, int end, int **MapId) {
+void ViewDGTable(DocGia *ListDG, int begin, int end, int **MapId) {
 	cout << "\ncheck ham doc gia";
 	int row=0;
 	int X;
 	int Y=HEADER+BLOCK+MG;
+	drawTable(MapId, tableTitleDocGia1, tableTitleWidthDocGia1, 5);
 	setcolor(0);
 	setbkcolor(MAIN_COLOR);
 	settextstyle(TEXT_FONT, 0, 2);
@@ -374,7 +375,7 @@ void PrintDGTable(DocGia *ListDG, int begin, int end, int **MapId) {
 	}
 }
 
-void PrintDSTable(DanhSachDauSach ArrDauSach, int begin, int end, int **MapId) {
+void PrintDSTable(ArrPointerDauSach ArrDauSach, int begin, int end, int **MapId) {
 	std::cout << "\ncheck ham in dau sach";
 	int row=0;
 	int X;
@@ -493,7 +494,44 @@ void ViewTopTenDauSachTable(DauSach *ArrTopTen[], int **MapId) {
 		Y+=BLOCK;
 	}
 	std::cout << "\ncheck ham in Top 10 DS";
-} 
+}
+
+void ViewDocGiaQuaHan(ListDGQuaHan list, int **MapId) {
+	int X;
+	int Y=HEADER+BLOCK+MG;
+	int row=(list.n >= 13) ? 13 : list.n;
+	std::cout<<"\ncheck row:"<<row;
+	char buffer[30];
+	NodeDGQuaHan *pNode;
+	pNode=list.pFirst;
+	drawTable(MapId, tableTitleQuaHan1, tableTitleWidthQuaHan1, 6);
+	setcolor(0);
+	setbkcolor(MAIN_COLOR);
+	settextstyle(TEXT_FONT, 0, 2);
+	for(int i=0; i<row; i++) {
+//		if(pNode==NULL) {
+//			std::cout<<"\npnode ko ton tai";
+//		} else {
+//			std::cout<<"\npNode co ton tai";
+//		}
+//		std::cout<<"\ncheck doc gia qua han ";
+//		std::cout<<i<<" :";
+//		std::cout<<pNode->data.MATHE;
+//		std::cout<<" ,so ngay qua han:"<<pNode->soNgayQuaHan;
+		X=ACTICLE+MG*2;
+		itoa(pNode->data.MATHE, buffer, 10);
+		outtextxy(X, Y, buffer);
+		outtextxy(X+=tableTitleWidthQuaHan1[0], Y, pNode->data.ho.c_str());
+		outtextxy(X+=tableTitleWidthQuaHan1[1], Y, pNode->data.ten.c_str());
+		outtextxy(X+=tableTitleWidthQuaHan1[2], Y, PhaiDocGia[pNode->data.phai]);
+		outtextxy(X+=tableTitleWidthQuaHan1[3], Y, TTTDocGia[pNode->data.trangthai]);
+		itoa(pNode->soNgayQuaHan, buffer, 10);
+		outtextxy(X+=tableTitleWidthQuaHan1[4], Y, buffer);
+		Y+=BLOCK;
+		pNode=pNode->next;
+	}
+	std::cout << "\ncheck ham in doc gia qua han";
+}
 
 void printMapId(int **MapId) {
 	for(int i=0; i<h; i+=38) {
@@ -575,7 +613,7 @@ void ScanNumber(EditText &EDIT, int maxlen, int **MapId) {
 	EDIT.draw(MapId);
 }
 
-ScanSearchDS(EditText &EDIT, int maxlen, DanhSachDauSach dsds, DanhSachDauSach &searchDS, int **MapId) {
+ScanSearchDS(EditText &EDIT, int maxlen, ArrPointerDauSach dsds, ArrPointerDauSach &searchDS, int **MapId) {
 	char c;
 	int len;
 	len=strlen(EDIT.content);

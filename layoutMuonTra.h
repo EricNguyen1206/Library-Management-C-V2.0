@@ -8,20 +8,18 @@
 int MuonTraController(int **MapId, int &x, int &y) {
 	refreshMainLayout(MapId);
 	drawHeader(MapId, 3);
-	int lenDG=0, currentID=-1, currentPos=-1, sachMuon;
+	int lenDG=0, currentID=-1, currentPos=-1, sachMuon, soDGMuonSach;
 	char buffer[30];
-	DocGia ListDG[MAXDOCGIA], *currentDG;
+	DocGia ArrDG[MAXDOCGIA], *currentDG;
 	NodeDMS *currentNodeDMS;
 	NodeMuonTra *currentNodeMT;
 	MuonTra mt;
-	DanhSachDauSach ArrDauSach;
 	DauSach *ArrTopTen[10], *currentDS;
-	std::cout<<"\ncheck load file dau sach "<<LoadFileDauSach(ArrDauSach);
-	std::cout<<"\ncheck load file danh muc"<<LoadFileDanhMucSach(ArrDauSach);
+	drawTable(MapId, tableTitleDanhMuc, tableTitleWidthDanhMuc, 3);
+	soDGMuonSach=LoadFileMuonTra(CayDocGia);
+	std::cout<<"\ncheck load file muon tra"<<soDGMuonSach;
 	GetTopTenDauSach(ArrDauSach, ArrTopTen);
-	CreateDocGiaArr(CayDocGia, ListDG, lenDG);
-	std::cout<<"\ncheck lenDG:"<<lenDG;
-	std::cout<<LoadFileMuonTra(ListDG);
+	CreateDocGiaArr(CayDocGia, ArrDG, lenDG);
 	
 	Button btnMuonSach(MG, UNIT*3+MG*2, BLOCK*4, BLOCK, "Muon Sach", 301);
 	Button btnTraSach(ACTICLE-BLOCK*4, UNIT*3+MG*2, BLOCK*4, BLOCK, "Tra sach", 302);
@@ -33,6 +31,7 @@ int MuonTraController(int **MapId, int &x, int &y) {
 	Button btnChangeDS(ACTICLE-BLOCK-MG*3, YDS[5], BLOCK+MG*2, BLOCK, "Xoa", 308);
 	Button btnXacNhanTra(BLOCK, h-BLOCK*2+MG, BLOCK*4, BLOCK, "Tra sach", 320);
 	Button btnLamMat(BLOCK*7, h-BLOCK*2+MG, BLOCK*4, BLOCK, "Lam mat", 321);
+//	Button btnListDGQuaHan(ACTICLE, UNIT*3+MG*2, BLOCK*4, BLOCK, "Qua han", 322);
 	
 	EditText edSearchDocGia(MG*2, YDS[0], BLOCK*6, BLOCK, "Nhap ma the :", "", "Nhap vao 4 so", 310);
 	EditText edNameDocGia(BLOCK, YDS[1], BLOCK*7-MG, BLOCK, "Doc gia :", "", "", 311);
@@ -52,6 +51,7 @@ int MuonTraController(int **MapId, int &x, int &y) {
 	btnTopTen.draw(MapId);
 	btnSearchDocGia.draw(MapId);
 	btnSearchDauSach.draw(MapId);
+//	btnListDGQuaHan.draw(MapId);
 	
 	edSearchDocGia.draw(MapId);
 	edNameDocGia.draw(MapId);
@@ -60,7 +60,6 @@ int MuonTraController(int **MapId, int &x, int &y) {
 	edTrangThaiTheDocGia.draw(MapId);
 	edSearchISBN.draw(MapId);
 	
-	drawTable(MapId, tableTitleDanhMuc, tableTitleWidthDanhMuc, 3);
 	while(1) {
 		delay(0.0001);
         if (ismouseclick(WM_LBUTTONDOWN)){
@@ -70,7 +69,7 @@ int MuonTraController(int **MapId, int &x, int &y) {
             	case -1:
             		return 0;
             	case -2:
-            		exit(1);
+            		return 5;
             	case 100:
             		return 1;
             	case 140:
@@ -153,17 +152,17 @@ int MuonTraController(int **MapId, int &x, int &y) {
             		btnSearchDocGia.deleteBtn(MAIN_COLOR, MapId);
             		btnRefreash.draw(MapId);
             		currentID=atoi(edSearchDocGia.content);
-            		currentPos=FindIndexDocGiaInArr(ListDG, currentID);
-            		currentDG=&ListDG[currentPos];
+            		currentPos=FindIndexDocGiaInArr(ArrDG, currentID);
+            		currentDG=&ArrDG[currentPos];
             		std::cout<<"\ncheck docgia:"<<currentDG->ten<<", ID:"<<currentID<<", vitri:"<<currentPos;
             		std::cout<<"\nsach dau tien la:"<<currentDG->listMT->pFirst->data.maSach
 							<<", trang thai:"<<currentDG->listMT->pFirst->data.trangThai;
             		itoa(currentPos, buffer, 10);
-            		strcpy(edNameDocGia.content, (ListDG[currentPos].ho + " " + ListDG[currentPos].ten).c_str());
+            		strcpy(edNameDocGia.content, (ArrDG[currentPos].ho + " " + ArrDG[currentPos].ten).c_str());
             		std::cout<<"\n check 0";
             		strcpy(edMaTheDocGia.content, buffer);
-            		strcpy(edGioiTinhDocGia.content, PhaiDocGia[ListDG[currentPos].phai]);
-            		strcpy(edTrangThaiTheDocGia.content, TTTDocGia[ListDG[currentPos].trangthai]);
+            		strcpy(edGioiTinhDocGia.content, PhaiDocGia[ArrDG[currentPos].phai]);
+            		strcpy(edTrangThaiTheDocGia.content, TTTDocGia[ArrDG[currentPos].trangthai]);
             		std::cout<<"\n check 1";
 					edGioiTinhDocGia.draw(MapId);
 					edTrangThaiTheDocGia.draw(MapId);
@@ -171,7 +170,7 @@ int MuonTraController(int **MapId, int &x, int &y) {
 					edMaTheDocGia.draw(MapId);
             		std::cout<<"\n check 2";
             		if(btnTraSach.isChoose) {
-            			PrintSachMuonTable(ListDG[currentPos], MapId);
+            			PrintSachMuonTable(ArrDG[currentPos], MapId);
 					}
             		
             		std::cout<<"\n check 3";
@@ -228,6 +227,11 @@ int MuonTraController(int **MapId, int &x, int &y) {
 						mt.ngayMuon=GetDate();
 						mt.trangThai=0;
 						InsertLastListMuonTra(currentDG->listMT, mt);
+						if(currentDG->lichsumuon<13) {
+							currentDG->lichsumuon;
+						} else {
+							DeleteFirstListMuonTra(currentDG->listMT);
+						}
 					}
 					PrintDMTable(currentDS->listDMS, 0, currentDS->soLuong,MapId);
             		break;
@@ -261,7 +265,7 @@ int MuonTraController(int **MapId, int &x, int &y) {
 					currentNodeDMS->data.TrangThai=0;
 					currentNodeMT->data.trangThai=1;
 					currentNodeMT->data.ngayTra=GetDate();
-					PrintSachMuonTable(ListDG[currentPos], MapId);
+					PrintSachMuonTable(ArrDG[currentPos], MapId);
 					break;
 				case 321:
 					btnXacNhanTra.deleteBtn(BG_COLOR, MapId);
@@ -270,8 +274,10 @@ int MuonTraController(int **MapId, int &x, int &y) {
 					currentNodeDMS->data.TrangThai=2;
 					currentNodeMT->data.trangThai=2;
 					currentNodeMT->data.ngayTra=GetDate();
-					PrintSachMuonTable(ListDG[currentPos], MapId);
+					PrintSachMuonTable(ArrDG[currentPos], MapId);
 					break;
+//				case 322:
+//					ViewDocGiaQuaHan(ListDGQH, MapId);
 				case 330:
 				case 331:
 				case 332:

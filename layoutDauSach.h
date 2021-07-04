@@ -10,14 +10,15 @@ int DauSachController(int **MapId, int &x, int &y) {
 	
 	refreshMainLayout(MapId);
 	drawHeader(MapId, 1);
-	DanhSachDauSach ArrDauSach;
+	ArrPointerDauSach ArrDauSach;
 	std::cout<<"\ncheck load file dau sach "<<LoadFileDauSach(ArrDauSach);
 	std::cout<<"\ncheck load file danh muc"<<LoadFileDanhMucSach(ArrDauSach);
 	int mode=0, begin=0, end, pos;//mode = 0: mac dinh,mode = 1: tim kiem 
 	char buffer[30];
 	DauSach *currentDS;
 	NodeDMS *pNode;
-	DanhSachDauSach searchDS;
+	ArrPointerDauSach searchDS;
+	drawTable(MapId, tableTitleDauSach, tableTitleWidthDauSach, 6);
 	Button btnThemmoi(MG+BLOCK*4, UNIT*3+MG*2, BLOCK*4, BLOCK, "Them moi", 101);
 	Button btnDieuchinh(ACTICLE-BLOCK*4, UNIT*3+MG*2, BLOCK*4, BLOCK, "Dieu chinh", 102);
 	Button btnTimkiem(w-BLOCK*3-MG,  UNIT*3+MG*2, BLOCK*3, BLOCK, "Tim", 103);
