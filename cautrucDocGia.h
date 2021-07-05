@@ -300,14 +300,12 @@ int GetListDGQuaHan(Tree root, ListDGQuaHan &list) {
 		Stack[++sp] = pNode;
 		pNode = pNode->pLeft;
 		}
-		std::cout<<"\ncheck sp:"<<sp;
 		if(sp != -1) {
 			pNode = Stack[sp--];//Pop stack
 			if(pNode->data.listMT!=NULL) {//Neu doc gia tung muon sach trong thu vien
 				NodeMuonTra *pCheck;
 				
-				pCheck=pNode->data.listMT->pFirst;
-				NodeMuonTra *pQuaHan;
+				pCheck=pNode->data.listMT->pFirst;//kiem tra tung sach trong list Muon tra
 				int NgayMuon=0;
 				while(pCheck!=NULL) {//Neu Doc gia chua tra sach thi tinh so ngay da muon
 					if(pCheck->data.ngayTra.nam==0 && getDifference(today, pCheck->data.ngayMuon)>NgayMuon) {
@@ -321,13 +319,10 @@ int GetListDGQuaHan(Tree root, ListDGQuaHan &list) {
 					count++;
 				}
 			}
-			
 			pNode = pNode->pRight;
-		}
-		else {
-			std::cout<<"\ncheck sp:"<<sp;
+		} else {//sp=-1: Stack rong thi dung
 			break;
-		}//sp=-1: Stack rong thi dung
+		}
 	}while (1);
 	std::cout<<"\ncheck so doc gia qua han:"<<list.n;
 	return count;

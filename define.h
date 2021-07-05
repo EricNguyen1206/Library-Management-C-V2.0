@@ -23,12 +23,12 @@
 
 // Phim nong
 //const int DELETE 			= 83;
-const int DOWN 				= 80;
-const int RIGHT 			= 77;
-const int LEFT 				= 75;
-const int UP 				= 72;
-const int F3 				= 61;
-const int F2 				= 60;
+//const int DOWN 			= 80;
+//const int RIGHT 			= 77;
+//const int LEFT 			= 75;
+//const int UP 				= 72;
+//const int F3 				= 61;
+//const int F2 				= 60;
 const int SPACE 			= 32;
 const int ESC 				= 27;
 const int ENTER 			= 13;

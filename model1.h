@@ -1,5 +1,5 @@
 #pragma once
-#include <ctime>
+#include <time.h>
 #include "cautrucDocGia.h"
 #include <iostream>
 #include <fstream>
@@ -125,17 +125,6 @@ int CompareDS(DauSach *a, DauSach *b, int mode) {//mode=0: so sanh theo the loai
 void SortDS(ArrPointerDauSach &dsds) {
 	DauSach* temp;
 	int mode;
-//	mode=0: sort Dau Sach theo the alphabe the loai; else: sort theo alphabe ten sach
-	mode=1;//sort theo ten sach truoc
-	for (int i = 0; i < dsds.n - 1; i++) {
-		for (int j = i + 1; j < dsds.n; j++) {
-			if (CompareDS(dsds.dsDauSach[i], dsds.dsDauSach[j], mode)>0) {
-				temp = dsds.dsDauSach[i];
-				dsds.dsDauSach[i] = dsds.dsDauSach[j];
-				dsds.dsDauSach[j] = temp;
-			}
-		}
-	}
 	mode=0;//sort theo the loai
 	for (int i = 0; i < dsds.n - 1; i++) {
 		for (int j = i + 1; j < dsds.n; j++) {
@@ -143,7 +132,15 @@ void SortDS(ArrPointerDauSach &dsds) {
 				temp = dsds.dsDauSach[i];
 				dsds.dsDauSach[i] = dsds.dsDauSach[j];
 				dsds.dsDauSach[j] = temp;
+			} else if(CompareDS(dsds.dsDauSach[i], dsds.dsDauSach[j], mode)==0) {
+				mode=1;
+				if (CompareDS(dsds.dsDauSach[i], dsds.dsDauSach[j], mode)>0) {
+					temp = dsds.dsDauSach[i];
+					dsds.dsDauSach[i] = dsds.dsDauSach[j];
+					dsds.dsDauSach[j] = temp;
+				}
 			}
+			mode=0;
 		}
 	}
 }
@@ -157,9 +154,6 @@ int InsertDauSach(ArrPointerDauSach &dsds, DauSach *ds) {
 	return 0;
 }
 
-
-
-
 bool CheckISBN(ArrPointerDauSach dsds, DauSach *ds) {//kiem tra isbn cua dau sach da co tron he thong chua
 	for(int i=0; i<dsds.n; i++) {
 		if(strcmp(dsds.dsDauSach[i]->ISBN, ds->ISBN)==0) {
@@ -169,24 +163,11 @@ bool CheckISBN(ArrPointerDauSach dsds, DauSach *ds) {//kiem tra isbn cua dau sac
 	return true;
 }
 
-
 void  XoaDauSach(ArrPointerDauSach &dsds, int pos) {
-//	if(dsds.dsDauSach[l]->luotMuon > 0) 
-//		cout <<"Sach da co nguoi muon nen khong the xoa";
-//	else {
-
-			// xoa dms cua sach do
-//			NodeDanhMucSach *r = dsds.dsDauSach[l]->dms;
-//			NodeDanhMucSach *k;
-//			while(r != NULL) {
-//				k = r->next;
-//				delete r;
-//				r = k;
-//			}
-			// cap nhat so sach trong dms
 	delete  (dsds.dsDauSach[pos]);
-	for(int i = pos; i <dsds.n; i++) 
+	for(int i = pos; i <dsds.n; i++) {
 		dsds.dsDauSach[i] = dsds.dsDauSach[i + 1];
+	}
 	dsds.n--;
 	return;
 }
@@ -256,7 +237,32 @@ void GetTopTenDauSach(ArrPointerDauSach dsds, DauSach *ArrDS[]) {
 	std::cout<<"\n check top 10";
 }
 // ---------- Handle DocGia's structure function ------------
-int getIdDocGia(int reader) {
+
+bool IdDocGiaIsUsed(Tree root, int id) {
+	const int STACKSIZE = 500;
+	NodeBST *Stack[STACKSIZE];
+	NodeBST *pNode;
+	pNode=root;
+	int sp = -1;//Khoi tao Stack rong
+	do {
+		while (pNode != NULL) {
+			Stack[++sp] = pNode;
+			pNode = pNode->pLeft;
+		}
+		if(sp != -1) {
+			pNode = Stack[sp--];//Pop stack
+			if(pNode->data.MATHE==id) {
+				return true;
+			}
+			pNode = pNode->pRight;
+		} else {
+			return false;
+			break;
+		}//sp=-1: Stack rong thi dung
+	}while (1);
+}
+
+int getIdDocGia(Tree root, int reader) {
 	std::ifstream FileIn;
 	FileIn.open("FileMaDocGia.txt", ios::in);
 	if(FileIn.fail()) {
@@ -265,6 +271,9 @@ int getIdDocGia(int reader) {
 	int id;
 	FileIn.seekg(6*(reader-1), ios::beg);
 	FileIn >> id;
+	while(IdDocGiaIsUsed(root, id)) {
+		FileIn >> id;
+	}
 	FileIn.close();
 	return id;
 }
@@ -327,25 +336,6 @@ void SortDGByIndex(DocGia arr[]) {
 
 
 // ---------- Handle MuonTra's structure function ------------
-//NodeDocGia* TimDocGia(NodeDocGia *root, int maTheDocGiaTuBanPhim) {
-//	// Duyet cay bang LNR, thuat toan trong giao trinh
-//	const int STACKSIZE = 500;
-//	NodeDocGia *Stack[STACKSIZE];
-//	NodeDocGia *p = root;
-//	int sp = -1; // khoi tao stack rong
-//	do {
-//		while (p != NULL) {
-//		Stack[++sp] = p;
-//		p = p->left;
-//		}
-//		if(sp == -1) {
-//			p = Stack[sp--];
-//			if(p->maThe == maTheDocGiaTuBanPhim) return p;
-//			p = p->right;
-//		}
-//		else break;
-//	}while (1);
-//}
 
 int GetSoSachMuonDG(DocGia *docgia) {
 	int count=0;
@@ -366,11 +356,6 @@ NodeMuonTra *CreateNodeMT(MuonTra mt) {
 	return pNode;
 }
 void InsertLastListMuonTra(ListMT *&listMT, MuonTra mt) {
-	mt.ngayMuon=GetDate();
-	mt.trangThai=0;
-	mt.ngayTra.ngay=0;
-	mt.ngayTra.thang=0;
-	mt.ngayTra.nam=0;
 	NodeMuonTra *pInsert = CreateNodeMT(mt);
 	NodeMuonTra *pNode = listMT->pFirst;
 	if(listMT->pFirst == NULL) {
@@ -486,8 +471,6 @@ int LoadFileDauSach(ArrPointerDauSach &ArrDauSach) {
 		FileIn >> dausach->luotMuon;//8
 		i+=InsertDauSach(ArrDauSach, dausach);
 	}
-//	i-=2;
-//	std::cout<<"\ncheck doc du lieu i cuoi: "<<i<<" len cuoi="<<len;
 	FileIn.close();
 	std::cout<<"\ncheck load file dau sach";
 	return (i==len ? len : 0);
@@ -632,11 +615,7 @@ void SaveFileDanhSachMuonTra(Tree root, int nMT) {
 	const int STACKSIZE = 500;
 	NodeBST *Stack[STACKSIZE];
 	NodeBST *pNode = root;
-//	int k=0;
-//	DemDocGia(root, k);
-	
 	NodeMuonTra *r;
-//	std::cout<<"\ncheck so doc gia:"<<k;
 	do {
 		while(pNode!=NULL) {
 			Stack[++sp] = pNode;
@@ -647,9 +626,7 @@ void SaveFileDanhSachMuonTra(Tree root, int nMT) {
 			if(pNode==NULL) {
 				std::cout<<"\ndoc gia ko ton tai";
 			}
-//			std::cout<<"\ncheck in thong tin muon tra dg:"<<pNode->data.MATHE;
 			if(pNode->data.listMT!=NULL && pNode->data.listMT->pFirst!=NULL) {
-//				std::cout<<"\ncheck 1";
 				file << pNode->data.MATHE << endl 
 					<< pNode->data.lichsumuon << endl;
 				for(r = pNode->data.listMT->pFirst; r != NULL; r = r->next) {
@@ -661,7 +638,6 @@ void SaveFileDanhSachMuonTra(Tree root, int nMT) {
 			}
 			
 			pNode = pNode->pRight;
-//			std::cout<<"\ncheck in thong tin muon tra dg:"<<pNode->data.MATHE;
 		}
 		else break;
  	} while(1);

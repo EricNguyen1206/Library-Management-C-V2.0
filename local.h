@@ -1,9 +1,7 @@
 #pragma once
 #include "define.h"
-#include "model.h"
+//#include "model.h"
 #include <string>
-//#include "cautrucDocGia.h"
-//#include "model1.h"
 
 //Thuoc tinh trong table
 char tableTitleQuaHan1[6][30] 	= {"Ma the", "Ho", "Ten", "Gioi tinh", "Trang thai", "So ngay qua han"};
@@ -22,12 +20,12 @@ int tableTitleWidthDanhMuc[3]	= {100, 300, TABLE_W-400-MG};
 //Tung do trong bang ACTICLE
 int YDS[6] 						= {BLOCK*6, BLOCK*8, BLOCK*10, BLOCK*12, BLOCK*14, BLOCK*16};
 //Trang thai cac thuoc tinh du lieu
-enum TrangThaiSachThuVien{choMuonDuoc, daMuon, daThanhLy}; //choMuonDuoc = 0, daMuon = 1,daThanhLy = 2  
-enum TrangThaiSachMuonTra{dangMuon, daTra, lamMatSach}; // dang muon = 0; da tra = 1; lam mat sach = 2
-enum ModeSapXepDocGia{maDocGia, hoTen};
-enum TheLoaiSach{VanHoc, KinhTe, LichSu, TruyenTranh, GiaoTrinh, NgoaiNgu};
+enum TrangThaiSachThuVien			{CHOMUONDUOC, DAMUON, DATHANHLY}; //choMuonDuoc = 0, daMuon = 1,daThanhLy = 2  
+enum TrangThaiSachMuonTra			{DANGMUON, DATRA, LAMMATSACH}; // dang muon = 0; da tra = 1; lam mat sach = 2
+enum ModeSapXepDocGia				{MADOCGIA, HOTEN};
+enum TrangThaiTheDocGia				{KHOA, HOATDONG};
+enum GioiTinhDocGia					{NAM, NU};
 
-char MaSach[6][30]				= {"VH", "KT", "LS", "TT", "GT", "NN"};
 char TrangThaiSach[3][30] 		= {"CHO MUON DUOC", "DA CHO MUON", "DA THANH LY"};
 char TTMuonTra[3][30] 			= {"DANG MUON", "DA TRA", "LAM MAT"};
 char TTTDocGia[2][30] 			= {"KHOA", "HOAT DONG"};
