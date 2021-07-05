@@ -93,6 +93,7 @@ int main(int argc, char *argv[])
             		SaveFileDanhMucSach(ArrDauSach);
             		SaveFileDauSach(ArrDauSach);
 					FreeDSArr(ArrDauSach);
+					FreeMemoryBST(CayDocGia);
             		for(int i=0; i<h; i++) {
 						delete [] MapId[i];
 					}

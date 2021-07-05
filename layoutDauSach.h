@@ -49,7 +49,6 @@ int DauSachController(int **MapId, int &x, int &y) {
 	btnTimkiem.draw(MapId);
 	btnExit.draw(MapId);
 	std::cout<<"\ncheck 2.1";
-//	drawTable(MapId, tableTitleDauSach, tableTitleWidthDauSach, 6);
 	SortDS(ArrDauSach);
 	end=13;
 	std::cout<<"\ncheck 2.2";

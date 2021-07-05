@@ -238,7 +238,7 @@ void drawTitle(char title[], int align, int font_size) {//align 1 = left; align 
 void ViewStartScreen(Button routeDauSach, Button routeDocGia, Button routeMuonTra, Button InfoProject, Button ExitApp, int **MapId) {
 	resetMapID(MapId);
 	drawBox(0, 0, w, h, BG_COLOR);
-	drawBox(w/2-BLOCK*6, UNIT, BLOCK*12, BLOCK*20, MAIN_COLOR);
+	drawBox(w/2-BLOCK*6, UNIT, BLOCK*12, BLOCK*16, MAIN_COLOR);
 	drawTitle(AppTitle, 0, 4);
 	routeDauSach.draw(MapId);
 	routeDocGia.draw(MapId);
@@ -560,19 +560,6 @@ void ViewDocGiaQuaHan(ListDGQuaHan list, int page, int **MapId) {
 		k++;
 		pNode=pNode->next;
 	}
-//	for(int i=0; i<row; i++) {
-//		X=ACTICLE+MG*2;
-//		itoa(pNode->data.MATHE, buffer, 10);
-//		outtextxy(X, Y, buffer);
-//		outtextxy(X+=tableTitleWidthQuaHan1[0], Y, pNode->data.ho.c_str());
-//		outtextxy(X+=tableTitleWidthQuaHan1[1], Y, pNode->data.ten.c_str());
-//		outtextxy(X+=tableTitleWidthQuaHan1[2], Y, PhaiDocGia[pNode->data.phai]);
-//		outtextxy(X+=tableTitleWidthQuaHan1[3], Y, TTTDocGia[pNode->data.trangthai]);
-//		itoa(pNode->soNgayQuaHan, buffer, 10);
-//		outtextxy(X+=tableTitleWidthQuaHan1[4], Y, buffer);
-//		Y+=BLOCK;
-//		pNode=pNode->next;
-//	}
 	std::cout << "\ncheck ham in doc gia qua han";
 }
 

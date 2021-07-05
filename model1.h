@@ -164,7 +164,15 @@ bool CheckISBN(ArrPointerDauSach dsds, DauSach *ds) {//kiem tra isbn cua dau sac
 }
 
 void  XoaDauSach(ArrPointerDauSach &dsds, int pos) {
-	delete  (dsds.dsDauSach[pos]);
+	DauSach *pNode=dsds.dsDauSach[pos];
+	NodeDMS *pList;
+	while(pNode->listDMS->pFirst!=NULL) {
+		pList=pNode->listDMS->pFirst;
+		pNode->listDMS->pFirst=pNode->listDMS->pFirst->next;
+		free(pList);
+	}
+	free(pNode);
+//	delete  (dsds.dsDauSach[pos]);
 	for(int i = pos; i <dsds.n; i++) {
 		dsds.dsDauSach[i] = dsds.dsDauSach[i + 1];
 	}
@@ -236,8 +244,95 @@ void GetTopTenDauSach(ArrPointerDauSach dsds, DauSach *ArrDS[]) {
 	}
 	std::cout<<"\n check top 10";
 }
-// ---------- Handle DocGia's structure function ------------
 
+
+// ---------- Handle MuonTra's structure function ------------
+int GetSoSachMuonDG(DocGia *docgia) {
+	int count=0;
+	NodeMuonTra *pNode=docgia->listMT->pFirst;
+	while(pNode) {
+		if(pNode->data.trangThai==0) {
+			count ++;
+		}
+		pNode=pNode->next;
+	}
+	return count;
+}
+
+NodeMuonTra *CreateNodeMT(MuonTra mt) {
+	NodeMuonTra *pNode = new NodeMuonTra;
+	pNode->data=mt;
+	pNode->next = NULL;
+	return pNode;
+}
+void InsertLastListMuonTra(ListMT *&listMT, MuonTra mt) {
+	NodeMuonTra *pInsert = CreateNodeMT(mt);
+	NodeMuonTra *pNode = listMT->pFirst;
+	if(listMT->pFirst == NULL) {
+		listMT->pFirst = pInsert;
+		return;
+	}
+	while(pNode->next != NULL) {
+		pNode = pNode->next;
+	}
+	pNode->next = pInsert;
+}
+
+int FindIndexDocGiaInArr(DocGia ListDG[], int mathe) {
+	for(int i=0; i<MAXDOCGIA; i++) {
+		if(ListDG[i].MATHE==mathe) {
+			return i;
+		}
+	}
+}
+
+NodeBST *FindNodeBSTById(Tree root, int IdDocGia) {
+	const int STACKSIZE = 500;
+	NodeBST *Stack[STACKSIZE];
+	NodeBST *pNode;
+	pNode=root;
+	int sp = -1; // khoi tao Stack rong
+	do {
+		while (pNode != NULL) {
+			Stack[++sp] = pNode;
+			pNode = pNode->pLeft;
+		}
+		if(sp != -1) {
+			pNode = Stack[sp--];//Pop stack
+			if(pNode->data.MATHE==IdDocGia) {
+				return pNode;
+				break;
+			}
+			pNode = pNode->pRight;
+		} else {
+			std::cout<<"\nko tim thay doc gia:" << IdDocGia;
+			break;
+		}//sp=-1: Stack rong thi dung
+	}while (1);
+}
+
+NodeMuonTra *GetNodeMTById(ListMT *listMT, int index) {
+	NodeMuonTra *pNode=listMT->pFirst;
+	for(int i=0; i<index; i++) {
+		pNode=pNode->next;
+	}
+	return pNode;
+}
+
+void DeleteFirstListMuonTra(ListMT *&listMT) {
+	NodeMuonTra *pNode = listMT->pFirst;
+	listMT->pFirst = listMT->pFirst->next;
+	free(pNode);
+}
+
+void DeleteListMuonTra(ListMT *&listMT) {
+	while(listMT->pFirst!=NULL) {
+		DeleteFirstListMuonTra(listMT);
+	}
+}
+
+
+// ---------- Handle DocGia's structure function ------------
 bool IdDocGiaIsUsed(Tree root, int id) {
 	const int STACKSIZE = 500;
 	NodeBST *Stack[STACKSIZE];
@@ -334,86 +429,13 @@ void SortDGByIndex(DocGia arr[]) {
 	std::cout<<"\ncheck sort "<<dem<<" doc gia";
 }
 
-
-// ---------- Handle MuonTra's structure function ------------
-
-int GetSoSachMuonDG(DocGia *docgia) {
-	int count=0;
-	NodeMuonTra *pNode=docgia->listMT->pFirst;
-	while(pNode) {
-		if(pNode->data.trangThai==0) {
-			count ++;
-		}
-		pNode=pNode->next;
+void FreeMemoryBST(Tree root) {
+	if(root!=NULL) {
+		FreeMemoryBST(root->pLeft);
+		DeleteListMuonTra(root->data.listMT);
+		FreeMemoryBST(root->pRight);
+		free(root);
 	}
-	return count;
-}
-
-NodeMuonTra *CreateNodeMT(MuonTra mt) {
-	NodeMuonTra *pNode = new NodeMuonTra;
-	pNode->data=mt;
-	pNode->next = NULL;
-	return pNode;
-}
-void InsertLastListMuonTra(ListMT *&listMT, MuonTra mt) {
-	NodeMuonTra *pInsert = CreateNodeMT(mt);
-	NodeMuonTra *pNode = listMT->pFirst;
-	if(listMT->pFirst == NULL) {
-		listMT->pFirst = pInsert;
-		return;
-	}
-	while(pNode->next != NULL) {
-		pNode = pNode->next;
-	}
-	pNode->next = pInsert;
-}
-
-int FindIndexDocGiaInArr(DocGia ListDG[], int mathe) {
-	for(int i=0; i<MAXDOCGIA; i++) {
-		if(ListDG[i].MATHE==mathe) {
-			return i;
-		}
-	}
-}
-
-NodeBST *FindNodeBSTById(Tree root, int IdDocGia) {
-	const int STACKSIZE = 500;
-	NodeBST *Stack[STACKSIZE];
-	NodeBST *pNode;
-	pNode=root;
-	int sp = -1; // khoi tao Stack rong
-	do {
-		while (pNode != NULL) {
-			Stack[++sp] = pNode;
-			pNode = pNode->pLeft;
-		}
-		if(sp != -1) {
-			pNode = Stack[sp--];//Pop stack
-			if(pNode->data.MATHE==IdDocGia) {
-				return pNode;
-				break;
-			}
-			pNode = pNode->pRight;
-		} else {
-			std::cout<<"\nko tim thay doc gia:" << IdDocGia;
-			break;
-		}//sp=-1: Stack rong thi dung
-	}while (1);
-}
-
-NodeMuonTra *GetNodeMTById(ListMT *listMT, int index) {
-	NodeMuonTra *pNode=listMT->pFirst;
-	for(int i=0; i<index; i++) {
-		pNode=pNode->next;
-	}
-	return pNode;
-}
-
-void DeleteFirstListMuonTra(ListMT *&listMT) {
-	NodeMuonTra *pNode = listMT->pFirst;
-	listMT->pFirst = listMT->pFirst->next;
-	delete pNode;
-	std::cout<<"\ncheck xoa dau list mt";
 }
 
 //------------------------ Load files --------------------------------
