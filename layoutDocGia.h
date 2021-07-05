@@ -16,6 +16,7 @@ int DocGiaController(int **MapId, int &x, int &y) {
 	begin=0, 
 	end, 
 	mode=1, 
+	page=0, 
 	index, 
 	NewId;
 	NodeBST *p;
@@ -152,8 +153,23 @@ int DocGiaController(int **MapId, int &x, int &y) {
 						btnFilterName.toggle(btnFilterId, MapId);
 					}
 					break;
-				case 205:
-					if(begin>0 && !btnBackTable.isLock) {
+				case 205://Button back
+					if(btnBackTable.isLock) break;
+					if(btnListDGQuaHan.isChoose) {
+						if(page==0) {
+							break;
+						}
+						page--;
+						ViewDocGiaQuaHan(ListDGQH, page, MapId);
+						if(page==0) {
+							btnBackTable.isLock=true;
+							btnBackTable.draw(MapId);
+						}
+						btnNextTable.isLock=false;
+						btnNextTable.draw(MapId);
+						break;
+					}
+					if(begin>0) {
 						begin -= 13;
 						end -= end%13==0 ? 13 : lenDG%13;
 						if(begin == 0) {
@@ -166,8 +182,23 @@ int DocGiaController(int **MapId, int &x, int &y) {
 						btnNextTable.draw(MapId);
 					} 
 					break;
-				case 206:
-					if(end < lenDG && !btnNextTable.isLock) {
+				case 206://Button next
+					if(btnNextTable.isLock) break;
+					if(btnListDGQuaHan.isChoose) {
+						if(page*13 >= (ListDGQH.n-1)/13) {
+							break;
+						}
+						page++;
+						ViewDocGiaQuaHan(ListDGQH, page, MapId);
+						if(page*13 >= (ListDGQH.n-1)/13) {
+							btnNextTable.isLock=true;
+							btnNextTable.draw(MapId);
+						}
+						btnBackTable.isLock=false;
+						btnBackTable.draw(MapId);
+						break;
+					}
+					if(end < lenDG) {
 						begin += 13;
 						if(lenDG-end<13) {
 							end+=lenDG-end;
@@ -309,20 +340,31 @@ int DocGiaController(int **MapId, int &x, int &y) {
             	case 216:
             		if(!btnListDGQuaHan.isChoose) {
 	            		btnListDGQuaHan.toggle(btnTatCaDocGia, MapId);
+	            		btnThemDocGia.deleteBtn(BG_COLOR, MapId);
 	            		btnFilterId.deleteBtn(BG_COLOR, MapId);
 	            		btnFilterName.deleteBtn(BG_COLOR, MapId);
-	            		btnNextTable.deleteBtn(BG_COLOR, MapId);
-	            		btnBackTable.deleteBtn(BG_COLOR, MapId);
-	            		ViewDocGiaQuaHan(ListDGQH, MapId);
+	            		btnBackTable.isLock=true;
+	            		btnNextTable.isLock=ListDGQH.n<=13?true:false;
+	            		std::cout<<"\ncheck lenDg:"<<ListDGQH.n;
+	            		btnNextTable.draw(MapId);
+	            		btnBackTable.draw(MapId);
+            			page=0;
+	            		ViewDocGiaQuaHan(ListDGQH, page, MapId);
 					}
             		break;
             	case 217:
             		if(!btnTatCaDocGia.isChoose) {
             			btnTatCaDocGia.toggle(btnListDGQuaHan, MapId);
+            			btnThemDocGia.draw(MapId);
 	            		btnFilterId.draw(MapId);
 	            		btnFilterName.draw(MapId);
-	            		btnNextTable.draw(MapId);
+	            		btnBackTable.isLock=true;
+	            		btnNextTable.isLock=lenDG<=13?true:false;
+	            		std::cout<<"\ncheck lenDg:"<<lenDG;
 	            		btnBackTable.draw(MapId);
+	            		btnNextTable.draw(MapId);
+	            		begin=0;
+	            		end = (lenDG>=13) ? 13 : lenDG;
 	            		ViewDGTable(ListDG, begin , end, MapId);
 					}
             		break;
@@ -331,7 +373,7 @@ int DocGiaController(int **MapId, int &x, int &y) {
             	case 232:
             	case 233:
             	case 234:
-            	case 235:
+            	case 235://Chon doc gia trong table
             	case 236:
             	case 237:
             	case 238:

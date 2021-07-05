@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 	Button btnInfoProject(w/2-BLOCK*5, BLOCK*12, BLOCK*10, BLOCK*2, InforProjectTitle, 4);
 	Button btnExitApp(w/2-BLOCK*5, BLOCK*15, BLOCK*10, BLOCK*2, ExitApplication, 5);
 	
-	ViewStartScreen(btnRouteDauSach, btnRouteDocGia, btnRouteMuonTra, btnExitApp, MapId);
+	ViewStartScreen(btnRouteDauSach, btnRouteDocGia, btnRouteMuonTra, btnInfoProject, btnExitApp, MapId);
 	
 	std::cout<<"\ncheck load file the doc gia: "<<LoadFileTheDocGia(CayDocGia);
 	std::cout<<"\ncheck load file dau sach: "<<LoadFileDauSach(ArrDauSach);
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 					} else if(Router == 5) {
 						goto label_5;
 					}
-            		ViewStartScreen(btnRouteDauSach, btnRouteDocGia, btnRouteMuonTra, btnExitApp, MapId);
+            		ViewStartScreen(btnRouteDauSach, btnRouteDocGia, btnRouteMuonTra, btnInfoProject, btnExitApp, MapId);
             		break;
             	case 2:
             		label_2:
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 					} else if(Router == 3) {
 						goto label_3;
 					}
-            		ViewStartScreen(btnRouteDauSach, btnRouteDocGia, btnRouteMuonTra, btnExitApp, MapId);
+            		ViewStartScreen(btnRouteDauSach, btnRouteDocGia, btnRouteMuonTra, btnInfoProject, btnExitApp, MapId);
             		break;
             	case 3:
             		label_3:
@@ -80,9 +80,11 @@ int main(int argc, char *argv[])
 					} else if(Router == 5) {
 						goto label_5;
 					}
-            		ViewStartScreen(btnRouteDauSach, btnRouteDocGia, btnRouteMuonTra, btnExitApp, MapId);
+            		ViewStartScreen(btnRouteDauSach, btnRouteDocGia, btnRouteMuonTra, btnInfoProject, btnExitApp, MapId);
             		break;
             	case 4:
+            		AppInfoController(MapId);
+            		ViewStartScreen(btnRouteDauSach, btnRouteDocGia, btnRouteMuonTra, btnInfoProject, btnExitApp, MapId);
             		break;
             	case 5:
             		label_5:

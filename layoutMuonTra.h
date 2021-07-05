@@ -243,6 +243,10 @@ int MuonTraController(int **MapId, int &x, int &y) {
 				case 314:
 					break;
 				case 315://nhap isbn sach can tim
+					if(edSearchISBN.content[0] == '\0') {
+	            			drawNotification(VuiLongNhapMaThe);
+	            			break;
+					}
 					ScanNumber(edSearchISBN, 5, MapId);
 					break;
 				case 316:

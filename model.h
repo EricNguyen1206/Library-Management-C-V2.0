@@ -85,7 +85,7 @@ struct Button{
 };
 Button btnDausach(BLOCK*23, BLOCK, BLOCK*4, UNIT, "Dau sach", 100);
 Button btnDocgia(BLOCK*27+MG, BLOCK, BLOCK*3, UNIT, "Doc gia", 200);
-Button btnMuontrasach(BLOCK*30 + MG*2, BLOCK, BLOCK*5, UNIT, "Muon tra sach", 300);	
+Button btnMuontrasach(BLOCK*30 + MG*2, BLOCK, BLOCK*5, UNIT, "Muon tra sach", 300);
 Button btnBackMenu(0, 0, BLOCK+MG, UNIT, "<<", -1);
 Button btnExit(w-BLOCK, 0, BLOCK, UNIT, "X", -2);
 
@@ -235,8 +235,7 @@ void drawTitle(char title[], int align, int font_size) {//align 1 = left; align 
 	
 }
 
-
-void ViewStartScreen(Button routeDauSach, Button routeDocGia, Button routeMuonTra, Button ExitApp, int **MapId) {
+void ViewStartScreen(Button routeDauSach, Button routeDocGia, Button routeMuonTra, Button InfoProject, Button ExitApp, int **MapId) {
 	resetMapID(MapId);
 	drawBox(0, 0, w, h, BG_COLOR);
 	drawBox(w/2-BLOCK*6, UNIT, BLOCK*12, BLOCK*20, MAIN_COLOR);
@@ -244,7 +243,46 @@ void ViewStartScreen(Button routeDauSach, Button routeDocGia, Button routeMuonTr
 	routeDauSach.draw(MapId);
 	routeDocGia.draw(MapId);
 	routeMuonTra.draw(MapId);
+	InfoProject.draw(MapId);
 	ExitApp.draw(MapId);
+}
+
+int AppInfoController(int **MapId) {
+	int x, y;
+	resetMapID(MapId);
+	drawBox(0, 0, w, h, MAIN_COLOR);
+	drawBox(0, 0, w, UNIT, MAIN_COLOR);
+	btnBackMenu.draw(MapId);
+	btnExit.draw(MapId);
+	drawTitle(InforProjectTitle, 0, 4);
+	settextstyle(TITLE_FONT, 0, 3);
+	setbkcolor(MAIN_COLOR);
+	setcolor(0);
+	outtextxy((w-textwidth("Mon hoc"))/2, HEADER, "Mon hoc");
+	outtextxy((w-textwidth("CAU TRUC DU LIEU & GIAI THUAT"))/2, HEADER+UNIT, "CAU TRUC DU LIEU & GIAI THUAT");
+	outtextxy((w-textwidth("Giang vien"))/2, YDS[0], "Giang vien");
+	outtextxy((w-textwidth("LUU NGUYEN KY THU"))/2, YDS[0]+UNIT, "LUU NGUYEN KY THU");
+	outtextxy((w-textwidth("Sinh vien"))/2, YDS[1], "Sinh vien");
+	outtextxy((w-textwidth("NGUYEN TRONG TIN, NGUYEN THI NGAN"))/2, YDS[1]+UNIT, "NGUYEN TRONG TIN, NGUYEN THI NGAN");
+	outtextxy((w-textwidth("De tai"))/2, YDS[2], "De tai");
+	outtextxy((w-textwidth("QUAN LY THU VIEN"))/2, YDS[2]+UNIT, "QUAN LY THU VIEN");
+	outtextxy((w-textwidth("----------O----------"))/2, h-BLOCK*6, "----------O----------");
+	outtextxy((w-textwidth("2021"))/2, h-BLOCK*3, "2021");
+	
+	while(1) {
+		delay(0.0001);
+        if (ismouseclick(WM_LBUTTONDOWN)){
+            getmouseclick(WM_LBUTTONDOWN, x, y);
+            std::cout<<"\nleft click:"<<x<<" "<<y<<"="<<MapId[y][x];
+            switch(MapId[y][x]) {
+            	case -1:
+            		return 0;
+            	case -2:
+            		return 5;
+            }
+        }
+    }
+    delay(10);
 }
 
 void drawHeader(int **MapId, int index) {
@@ -290,8 +328,6 @@ void drawHeader(int **MapId, int index) {
 
 void refreshMainLayout(int **MapId) {
 	drawBox(0, 0, w, UNIT, 7);
-	
-	
 	drawBox(0, UNIT, w, UNIT+MG*2, 7);
 	drawActicle();
 	drawBox(ACTICLE+MG, HEADER, TABLE_W-MG*2, TABLE_H, 7);
@@ -493,11 +529,11 @@ void ViewTopTenDauSachTable(DauSach *ArrTopTen[], int **MapId) {
 	std::cout << "\ncheck ham in Top 10 DS";
 }
 
-void ViewDocGiaQuaHan(ListDGQuaHan list, int **MapId) {
+void ViewDocGiaQuaHan(ListDGQuaHan list, int page, int **MapId) {
 	int X;
 	int Y=HEADER+BLOCK+MG;
 	int row=(list.n >= 13) ? 13 : list.n;
-	std::cout<<"\ncheck row:"<<row;
+	int begin=page*13, end=page*13+13, k=0;
 	char buffer[30];
 	NodeDGQuaHan *pNode;
 	pNode=list.pFirst;
@@ -505,28 +541,38 @@ void ViewDocGiaQuaHan(ListDGQuaHan list, int **MapId) {
 	setcolor(0);
 	setbkcolor(MAIN_COLOR);
 	settextstyle(TEXT_FONT, 0, 2);
-	for(int i=0; i<row; i++) {
-//		if(pNode==NULL) {
-//			std::cout<<"\npnode ko ton tai";
-//		} else {
-//			std::cout<<"\npNode co ton tai";
-//		}
-//		std::cout<<"\ncheck doc gia qua han ";
-//		std::cout<<i<<" :";
-//		std::cout<<pNode->data.MATHE;
-//		std::cout<<" ,so ngay qua han:"<<pNode->soNgayQuaHan;
-		X=ACTICLE+MG*2;
-		itoa(pNode->data.MATHE, buffer, 10);
-		outtextxy(X, Y, buffer);
-		outtextxy(X+=tableTitleWidthQuaHan1[0], Y, pNode->data.ho.c_str());
-		outtextxy(X+=tableTitleWidthQuaHan1[1], Y, pNode->data.ten.c_str());
-		outtextxy(X+=tableTitleWidthQuaHan1[2], Y, PhaiDocGia[pNode->data.phai]);
-		outtextxy(X+=tableTitleWidthQuaHan1[3], Y, TTTDocGia[pNode->data.trangthai]);
-		itoa(pNode->soNgayQuaHan, buffer, 10);
-		outtextxy(X+=tableTitleWidthQuaHan1[4], Y, buffer);
-		Y+=BLOCK;
+	std::cout<<"\ncheck begin:"<<begin<<" end:"<<end;
+	while(k<end && pNode!=NULL) {
+		std::cout<<"\ncheck k";
+		if(k>=begin) {
+			std::cout<<"\ncheck node:"<<pNode->data.MATHE;
+			X=ACTICLE+MG*2;
+			itoa(pNode->data.MATHE, buffer, 10);
+			outtextxy(X, Y, buffer);
+			outtextxy(X+=tableTitleWidthQuaHan1[0], Y, pNode->data.ho.c_str());
+			outtextxy(X+=tableTitleWidthQuaHan1[1], Y, pNode->data.ten.c_str());
+			outtextxy(X+=tableTitleWidthQuaHan1[2], Y, PhaiDocGia[pNode->data.phai]);
+			outtextxy(X+=tableTitleWidthQuaHan1[3], Y, TTTDocGia[pNode->data.trangthai]);
+			itoa(pNode->soNgayQuaHan, buffer, 10);
+			outtextxy(X+=tableTitleWidthQuaHan1[4], Y, buffer);
+			Y+=BLOCK;
+		}
+		k++;
 		pNode=pNode->next;
 	}
+//	for(int i=0; i<row; i++) {
+//		X=ACTICLE+MG*2;
+//		itoa(pNode->data.MATHE, buffer, 10);
+//		outtextxy(X, Y, buffer);
+//		outtextxy(X+=tableTitleWidthQuaHan1[0], Y, pNode->data.ho.c_str());
+//		outtextxy(X+=tableTitleWidthQuaHan1[1], Y, pNode->data.ten.c_str());
+//		outtextxy(X+=tableTitleWidthQuaHan1[2], Y, PhaiDocGia[pNode->data.phai]);
+//		outtextxy(X+=tableTitleWidthQuaHan1[3], Y, TTTDocGia[pNode->data.trangthai]);
+//		itoa(pNode->soNgayQuaHan, buffer, 10);
+//		outtextxy(X+=tableTitleWidthQuaHan1[4], Y, buffer);
+//		Y+=BLOCK;
+//		pNode=pNode->next;
+//	}
 	std::cout << "\ncheck ham in doc gia qua han";
 }
 
