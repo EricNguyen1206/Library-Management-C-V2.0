@@ -11,7 +11,7 @@ void refreshMapID(int **MapId);
 void setId(int **MapId, int x, int y, int width, int height, int Id);
 void drawBox(int x, int y, int width, int height, int color);
 void drawTitle(char title[], int align, int font_size);
-//void drawStartScreen(Button routeDauSach, Button routeDocGia, Button routeMuonTra, int **MapId);
+//void ViewStartScreen(Button routeDauSach, Button routeDocGia, Button routeMuonTra, Button ExitApp int **MapId);
 void drawHeader(int **MapId, int index);
 void refreshMainLayout(int **MapId);
 void drawActicle();
@@ -85,7 +85,7 @@ struct Button{
 };
 Button btnDausach(BLOCK*23, BLOCK, BLOCK*4, UNIT, "Dau sach", 100);
 Button btnDocgia(BLOCK*27+MG, BLOCK, BLOCK*3, UNIT, "Doc gia", 200);
-Button btnMuontrasach(BLOCK*30 + MG*2, BLOCK, BLOCK*5, UNIT, "Muon tra sach", 300);		
+Button btnMuontrasach(BLOCK*30 + MG*2, BLOCK, BLOCK*5, UNIT, "Muon tra sach", 300);	
 Button btnBackMenu(0, 0, BLOCK+MG, UNIT, "<<", -1);
 Button btnExit(w-BLOCK, 0, BLOCK, UNIT, "X", -2);
 
@@ -111,6 +111,7 @@ struct EditText{
 	void draw(int **MapId){
 		settextstyle(TEXT_FONT, 0, 2);
 		setcolor(0);
+		char buffer[30];
 		
 		setbkcolor(MAIN_COLOR);
 		outtextxy(x, y+(height-textheight("TD"))/2, title);// Ve tieu de
@@ -131,8 +132,8 @@ struct EditText{
 			} else {
 				int len = (this->width)/textwidth("C");
 				char c[len];
-				strcpy(mess, this->content);
-				strncpy(c,strrev(mess), len);
+				strcpy(buffer, this->content);
+				strncpy(c,strrev(buffer), len);
 				outtextxy(x+BLOCK*4+MG, y+(height-textheight("C"))/2, strrev(c));
 			}
 			
@@ -235,18 +236,18 @@ void drawTitle(char title[], int align, int font_size) {//align 1 = left; align 
 }
 
 
-void drawStartScreen(Button routeDauSach, Button routeDocGia, Button routeMuonTra, int **MapId) {
+void ViewStartScreen(Button routeDauSach, Button routeDocGia, Button routeMuonTra, Button ExitApp, int **MapId) {
 	resetMapID(MapId);
 	drawBox(0, 0, w, h, BG_COLOR);
-	drawBox(w/2-BLOCK*6, UNIT, BLOCK*12, BLOCK*16, MAIN_COLOR);
+	drawBox(w/2-BLOCK*6, UNIT, BLOCK*12, BLOCK*20, MAIN_COLOR);
 	drawTitle(AppTitle, 0, 4);
 	routeDauSach.draw(MapId);
 	routeDocGia.draw(MapId);
 	routeMuonTra.draw(MapId);
+	ExitApp.draw(MapId);
 }
 
 void drawHeader(int **MapId, int index) {
-	
 	switch(index) {
 		case 1:
 		case 100:
@@ -352,7 +353,6 @@ void drawTable(int **MapId, char title[][30], int widthArr[], int colNum) {
 
 
 void ViewDGTable(DocGia *ListDG, int begin, int end, int **MapId) {
-	cout << "\ncheck ham doc gia";
 	int row=0;
 	int X;
 	int Y=HEADER+BLOCK+MG;
@@ -373,21 +373,19 @@ void ViewDGTable(DocGia *ListDG, int begin, int end, int **MapId) {
 		row++;
 		Y+=BLOCK;
 	}
+	cout << "\ncheck ham in doc gia";
 }
 
-void PrintDSTable(ArrPointerDauSach ArrDauSach, int begin, int end, int **MapId) {
-	std::cout << "\ncheck ham in dau sach";
+void ViewDSTable(ArrPointerDauSach ArrDauSach, int begin, int end, int **MapId) {
 	int row=0;
 	int X;
 	int Y=HEADER+BLOCK+MG;
 	DauSach *pointerDS;
-	std::cout << "\ncheck begin:"<<begin<<" check end:"<<end;
 	drawTable(MapId, tableTitleDauSach, tableTitleWidthDauSach, 6);
 	setcolor(0);
 	setbkcolor(MAIN_COLOR);
 	settextstyle(TEXT_FONT, 0, 2);
 	for(int i=begin; i<end; i++) {
-		std::cout<<"\ncheck i="<<i;
 		pointerDS=new DauSach;
 		pointerDS=ArrDauSach.dsDauSach[i];
 		X=ACTICLE+MG*2;
@@ -404,10 +402,10 @@ void PrintDSTable(ArrPointerDauSach ArrDauSach, int begin, int end, int **MapId)
 		row++;
 		Y+=BLOCK;
 	}
+	std::cout << "\ncheck ham in dau sach";
 }
 
-void PrintDMTable(ListDMS *listDMS, int begin, int end, int **MapId) {
-	std::cout << "\ncheck ham in dau sach";
+void ViewDanhMucTable(ListDMS *listDMS, int begin, int end, int **MapId) {
 	int row=0;
 	int X;
 	int Y=HEADER+BLOCK+MG;
@@ -429,13 +427,13 @@ void PrintDMTable(ListDMS *listDMS, int begin, int end, int **MapId) {
 			Y+=BLOCK;
 		}
 	}
+	std::cout << "\ncheck ham in dau sach";
 }
 
-void PrintSachMuonTable(DocGia docgia, int **MapId) {
+void ViewSachMuonTable(DocGia docgia, int **MapId) {
 	int X;
 	int Y=HEADER+BLOCK+MG;
 	NodeMuonTra *pNode=docgia.listMT->pFirst;
-//	NodeMuonTra *pNode=ListDG[Pos].listMT->pFirst;
 	string date;
 	char buffer[30];
 	drawTable(MapId, tableTitleMuonTra, tableTitleWidthMuonTra, 4);
@@ -447,7 +445,6 @@ void PrintSachMuonTable(DocGia docgia, int **MapId) {
 		X=ACTICLE+MG*2;
 		setId(MapId, X, Y, TABLE_W, BLOCK, 330+count);
 		outtextxy(X, Y, pNode->data.maSach.c_str());
-		std::cout << "\ncheck ma sach: "<<pNode->data.maSach;
 		date = (
 			string(itoa(pNode->data.ngayMuon.ngay, buffer, 10)) + "/" 
 			+ string(itoa(pNode->data.ngayMuon.thang, buffer, 10)) + "/" 
@@ -563,7 +560,7 @@ void ScanString(EditText &EDIT, int maxlen, int **MapId) {
 			EDIT.content[len]='_';
 			EDIT.content[len+1]='\0';
 		} else if(c==BACKSPACE) {
-			if(len==0) {
+			if(len==0 || EDIT.content[0]=='_') {
 				continue;
 			} else {
 				EDIT.content[len-2]='_';
@@ -595,7 +592,7 @@ void ScanNumber(EditText &EDIT, int maxlen, int **MapId) {
 			EDIT.content[len]='_';
 			EDIT.content[len+1]='\0';
 		} else if(c==BACKSPACE) {
-			if(len==0) {
+			if(len==0 || EDIT.content[0]=='_') {
 				continue;
 			} else {
 				EDIT.content[len-2]='_';
@@ -631,7 +628,7 @@ ScanSearchDS(EditText &EDIT, int maxlen, ArrPointerDauSach dsds, ArrPointerDauSa
 			len++;
 			searchDS = SearchDauSach(dsds, EDIT.content);
 			std::cout<<"\ncheck search n:"<<searchDS.n;
-            PrintDSTable(searchDS, 0, searchDS.n>=13?13:searchDS.n, MapId);
+            ViewDSTable(searchDS, 0, searchDS.n>=13?13:searchDS.n, MapId);
 
 		} else if((c>='a' && c<='z')  && len<=maxlen) {
 			c=c-'a'+'A';
@@ -641,7 +638,7 @@ ScanSearchDS(EditText &EDIT, int maxlen, ArrPointerDauSach dsds, ArrPointerDauSa
 			len++;
 			searchDS = SearchDauSach(dsds, EDIT.content);
 			std::cout<<"\ncheck search n:"<<searchDS.n;
-           	PrintDSTable(searchDS, 0, searchDS.n>=13?13:searchDS.n, MapId);
+           	ViewDSTable(searchDS, 0, searchDS.n>=13?13:searchDS.n, MapId);
 			
 		} else if(c==BACKSPACE) {
 			if(len==0 || EDIT.content[0]=='_') {
@@ -654,12 +651,12 @@ ScanSearchDS(EditText &EDIT, int maxlen, ArrPointerDauSach dsds, ArrPointerDauSa
 				
 				searchDS = SearchDauSach(dsds, EDIT.content);
 				std::cout<<"\ncheck search n:"<<searchDS.n;
-	        	PrintDSTable(searchDS, 0, searchDS.n>=13?13:searchDS.n, MapId);
+	        	ViewDSTable(searchDS, 0, searchDS.n>=13?13:searchDS.n, MapId);
 			}
 		} else if(c==ENTER) {
 			searchDS = SearchDauSach(dsds, EDIT.content);
 			std::cout<<"\ncheck search n:"<<searchDS.n;
-            PrintDSTable(searchDS, 0, searchDS.n>=13?13:searchDS.n, MapId);
+            ViewDSTable(searchDS, 0, searchDS.n>=13?13:searchDS.n, MapId);
 			break;
 		}
 		EDIT.draw(MapId);

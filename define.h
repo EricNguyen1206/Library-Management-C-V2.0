@@ -37,6 +37,7 @@ const int BACKSPACE 		= 8;
 // Gioi han cac csdl
 const int MAXDAUSACH 		= 1000;
 const int MAXDOCGIA 		= 1000;
+const int MAXLICHSUMUON		= 13;
 const int NGAYQUAHAN 		= 7;
 const int MAXSACHMUON 		= 3;
 

@@ -10,24 +10,18 @@
 #include <stdlib.h>
 
 int DocGiaController(int **MapId, int &x, int &y) {
-	int lenDG=0, begin=0, end, mode=1, index, NewId, soDocGiaMuonSach;
+	int lenDG=0, begin=0, end, mode=1, index, NewId;
 	char buffer[30];
 	NodeBST *p = new NodeBST;
 	DocGia ListDG[MAXDOCGIA];
 	DocGia current;
 	ListDGQuaHan ListDGQH;
-	drawTable(MapId, tableTitleDocGia1, tableTitleWidthDocGia1, 5);
-	soDocGiaMuonSach = LoadFileMuonTra(CayDocGia);
-	std::cout<<"\ncheck load file muon tra"<<soDocGiaMuonSach;
 	CreateDocGiaArr(CayDocGia, ListDG, lenDG);
+	IncayDocGia(CayDocGia);
 	std::cout<<"\ncheck get list Qua han"<<GetListDGQuaHan(CayDocGia, ListDGQH);
 	SortListDFQuaHan(ListDGQH);
-	
-	std::cout<<"\ncheck 1:";
-	std::cout<<"\nCheck listDGQH:"<<ListDGQH.pFirst->data.MATHE;
-	
 //	lenDG--';
-	std::cout<<"\n lenDG:" << lenDG;
+//	std::cout<<"\n lenDG:" << lenDG;
 	refreshMainLayout(MapId);
 	drawHeader(MapId, 2);
 	
@@ -61,7 +55,7 @@ int DocGiaController(int **MapId, int &x, int &y) {
 	
 	end = (lenDG>=13) ? 13 : lenDG;
 	SortDG(ListDG, lenDG, maDocGia);
-	std::cout << "\nbegin:"<<begin<<" end:"<<end;
+//	std::cout << "\nbegin:"<<begin<<" end:"<<end;
 	ViewDGTable(ListDG, begin , end, MapId);
 	btnBackTable.isLock=true;
 	btnBackTable.draw(MapId);
@@ -76,16 +70,10 @@ int DocGiaController(int **MapId, int &x, int &y) {
             std::cout<<"\nleft click:"<<x<<" "<<y<<"="<<MapId[y][x];
             switch(MapId[y][x]) {
             	case -1:
-            		SaveFileDanhSachMuonTra(CayDocGia, soDocGiaMuonSach);
-            		SaveFileDocGia(CayDocGia);
             		return 0;
             	case -2:
-            		SaveFileDanhSachMuonTra(CayDocGia, soDocGiaMuonSach);
-            		SaveFileDocGia(CayDocGia);
-            		exit(1);
+            		return 5;
             	case 100:
-            		SaveFileDanhSachMuonTra(CayDocGia, soDocGiaMuonSach);
-            		SaveFileDocGia(CayDocGia);
             		return 1;
 				case 201:
 					if(!(btnThemDocGia.isLock || btnThemDocGia.isChoose)) {
@@ -347,7 +335,6 @@ int DocGiaController(int **MapId, int &x, int &y) {
             	case 240:
             	case 241:
             	case 242:
-//            		std::cout<<" Id Doc Gia:"<<IdCurrentDocGia[MapId[y][x]-230];
             		btnThemDocGia.deleteBtn(BG_COLOR, MapId);
             		btnDieuChinhDocGia.isLock=true;
             		btnDieuChinhDocGia.draw(MapId);
@@ -385,13 +372,10 @@ int DocGiaController(int **MapId, int &x, int &y) {
 					btnConditionBlocked.draw(MapId);
             		break;
             	case 300:
-            		SaveFileDanhSachMuonTra(CayDocGia, soDocGiaMuonSach);
-            		SaveFileDocGia(CayDocGia);
             		return 3;
 			}
 			
         }
 	}
 	delay(10);
-	std::cout << "Check5\n";
 }

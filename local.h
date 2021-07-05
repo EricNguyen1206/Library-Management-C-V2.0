@@ -13,7 +13,7 @@ char tableTitleMuonTra[4][30] 	= {"Ma sach", "Ngay muon", "Ngay tra", "Trang tha
 char tableTitleDanhMuc[3][30] 	= {"Ma sach", "Trang thai", "Vi tri"};
 
 //Hoanh do cac thuoc tinh trong table
-int tableTitleWidthQuaHan1[6] 	= {80, 220, 150, 110, 150, TABLE_W-700-MG};
+int tableTitleWidthQuaHan1[6] 	= {80, 220, 150, 110, 150, TABLE_W-710-MG};
 int tableTitleWidthDauSach[6] 	= {80, 280, 70, 230, 90, TABLE_W-750-MG};
 int tableTitleWidthDocGia1[5] 	= {100, 300, 230, 120, TABLE_W-750-MG};
 int tableTitleWidthMuonTra[4] 	= {120, 250, 250, TABLE_W-620-MG};
@@ -33,7 +33,6 @@ char TTMuonTra[3][30] 			= {"DANG MUON", "DA TRA", "LAM MAT"};
 char TTTDocGia[2][30] 			= {"KHOA", "HOAT DONG"};
 char PhaiDocGia[2][30] 			= {"NAM", "NU"};
 
-char mess[30];
 //Cac tieu de su dung
 char AppTitle[] 				= "QUAN LY THU VIEN";
 char DauSachTitle[] 			= "DANH SACH DAU SACH";
@@ -47,16 +46,17 @@ char HieuChinhSachThanhCong[] 	= "HIEU CHINH SACH THANH CONG!";
 char MuonSachThanhCong[] 		= "MUON SACH THANH CONG!";
 char TraSachThanhCong[] 		= "TRA SACH THANH CONG!";
 char XoaDauSachThanhCong[]		= "XOA DAU SACH THANH CONG!";
-char XoaSachThanhCong[]			= "XOA SACH THANH CONG";
+char HieuChinhDocGiaThanhCong[]	= "HIEU CHINH DOC GIA THANH CONG!";
+char XoaSachThanhCong[]			= "XOA SACH THANH CONG!";
+char ThemDocGiaThanhCong[]		= "THEM DOC GIA THANH CONG!";
+char XoaDocGiaThanhCong[]		= "XOA DOC GIA THANH CONG!";
 char KhongDuocXoaSachNay[]		= "KHONG DUOC XOA SACH NAY!";
-char KhongDuocMuonSachNay[]		= "KHONG DUOC MUON SACH NAY";
-char KhongTimThaySach[]			= "KHONG TIM THAY SACH";
+char KhongDuocMuonSachNay[]		= "KHONG DUOC MUON SACH NAY!";
+char KhongTimThaySach[]			= "KHONG TIM THAY SACH :(";
+char SachDaDuocMuonHet[]		= "SACH DA DUOC MUON HET :(";
 char IsbnDaTonTai[]				= "ISBN DA TON TAI";
 char NamXuatBanKhongHopLe[]		= "NAM XUAT BAN KHONG HOP LE";
 char ChiDuocTangSoLuong[]		= "CHI DUOC TANG SO LUONG SACH";
-char ThemDocGiaThanhCong[]		= "THEM DOC GIA THANH CONG";
-char HieuChinhDocGiaThanhCong[]	= "HIEU CHINH DOC GIA THANH CONG";
-char XoaDocGiaThanhCong[]		= "XOA DOC GIA THANH CONG";
 char ThongTinKhongDuocDeTrong[] = "THONG TIN KHONG DUOC DE TRONG!";
 char VuiLongNhapLai[]			= "VUI LONG NHAP LAI";
 char NhapSach[] 				= "NHAP SACH";

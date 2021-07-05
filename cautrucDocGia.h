@@ -6,7 +6,60 @@
 #include "model.h"
 #include <string>
 using namespace std;
+// ---------- Dates & times ------------
+struct Date {
+	int ngay;
+	int thang;
+	int nam;
+};
 
+Date GetDate() {//lay ngay-thang-nam hien tai
+	Date resDate;
+	time_t now = time(0);
+	tm *ltm = localtime(&now);
+	resDate.nam=1900 + ltm->tm_year;
+	resDate.thang=1 + ltm->tm_mon;
+	resDate.ngay=ltm->tm_mday;
+	return resDate;
+}
+
+int countLeapYears(Date d) {
+    int years = d.nam;
+ 
+    // Check if the current year needs to be
+    //  considered for the count of leap years
+    // or not
+    if (d.thang <= 2)
+        years--;
+ 
+    // An year is a leap year if it
+    // is a multiple of 4,
+    // multiple of 400 and not a
+     // multiple of 100.
+    return years / 4
+           - years / 100
+           + years / 400;
+}
+
+int getDifference(Date dt1, Date dt2) {
+    
+    long int n1 = dt1.nam * 365 + dt1.ngay;
+    for (int i = 0; i < dt1.thang - 1; i++) {
+    	n1 += monthDays[i];
+	}
+    n1 += countLeapYears(dt1);
+    
+    long int n2 = dt2.nam * 365 + dt2.ngay;
+    for (int i = 0; i < dt2.thang - 1; i++) {
+    	n2 += monthDays[i];
+	}
+    n2 += countLeapYears(dt2);
+	
+    // tra ve so ngay dt1 ke tu ngay dt2
+    return (n1 - n2);
+}
+
+// ---------- Dau sach va danh muc sach ------------
 struct danhMucSach {
 	char MaSach[10];
 	int TrangThai;
@@ -31,7 +84,7 @@ struct DauSach{
 	string theLoai;
 	ListDMS *listDMS = NULL;
 	int soLuong; //so luong sach trong danh muc sach
-	int luotMuon;	// //so luot muon cho tung dau sach
+	int luotMuon;//so luot muon cho tung dau sach
 };
 
 struct ArrPointerDauSach{
@@ -39,70 +92,9 @@ struct ArrPointerDauSach{
 	DauSach *dsDauSach[MAXDAUSACH];
 };
 ArrPointerDauSach ArrDauSach;
-// ---------- Dates & times ------------
-struct Date {
-	int ngay;
-	int thang;
-	int nam;
-};
-
-Date GetDate() {
-	Date resDate;
-	time_t now = time(0);
-	tm *ltm = localtime(&now);
-	resDate.nam=1900 + ltm->tm_year;
-	resDate.thang=1 + ltm->tm_mon;
-	resDate.ngay=ltm->tm_mday;
-//	cout << "Year: " << 1900 + ltm->tm_year << endl;
-//	cout << "Month: "<< 1 + ltm->tm_mon<< endl;
-//	cout << "Day: "<<  ltm->tm_mday << endl;
-	return resDate;
-}
-
-int countLeapYears(Date d)
-{
-    int years = d.nam;
- 
-    // Check if the current year needs to be
-    //  considered for the count of leap years
-    // or not
-    if (d.thang <= 2)
-        years--;
- 
-    // An year is a leap year if it
-    // is a multiple of 4,
-    // multiple of 400 and not a
-     // multiple of 100.
-    return years / 4
-           - years / 100
-           + years / 400;
-}
-
-int getDifference(Date dt1, Date dt2)
-{
-    
-    long int n1 = dt1.nam * 365 + dt1.ngay;
-	
-    for (int i = 0; i < dt1.thang - 1; i++) {
-    	n1 += monthDays[i];
-	}
-    n1 += countLeapYears(dt1);
- 
-    // SIMILARLY, COUNT TOTAL NUMBER OF
-    // DAYS BEFORE 'dt2'
- 
-    long int n2 = dt2.nam * 365 + dt2.ngay;
-    for (int i = 0; i < dt2.thang - 1; i++) {
-    	n2 += monthDays[i];
-	}
-    n2 += countLeapYears(dt2);
-	
-    // return difference between two counts
-    return (n1 - n2);
-}
 
 // ---------- Muon Tra ------------
-struct MuonTra{
+struct MuonTra {
 	string maSach;
 	Date ngayMuon;
 	Date ngayTra;
@@ -134,7 +126,7 @@ struct DocGia{
 
 //	dslk don luu cac sach ma doc gia da va dang muon
 	ListMT *listMT = NULL;
-	int lichsumuon;
+	int lichsumuon;// do dai lich su muon tra cua doc gia
 	DocGia(){
 	}
 	DocGia(int MT, string Ho, string Ten, int Phai, int TT){
@@ -154,7 +146,7 @@ struct NodeBST {
 };
 
 typedef NodeBST *Tree;
-int readers;
+
 NodeBST *CreateNode(DocGia init) {
     NodeBST *p = new NodeBST;
     
@@ -250,8 +242,18 @@ int DeleteNodeBST(Tree &Root, NodeBST *x) {
 	}
 	return 0;
 }
-Tree CayDocGia=NULL;
 
+void IncayDocGia(Tree root) {
+	if(root!=NULL) {
+		IncayDocGia(root->pLeft);
+		std::cout<<"\ndoc gia"<<root->data.MATHE;
+		IncayDocGia(root->pRight);
+	}
+}
+Tree CayDocGia=NULL;
+int readers;
+
+// ---------- Doc Gia quan han ------------
 struct NodeDGQuaHan {
 	DocGia data;
 	int soNgayQuaHan;
@@ -268,7 +270,6 @@ NodeDGQuaHan *CreateNodeDGQuaHan(DocGia docgia, int soNgayQuaHan) {
 	pNode->data=docgia;
 	pNode->soNgayQuaHan=soNgayQuaHan;
 	pNode->next=NULL;
-	std::cout<<"\ncheck create Node qua han";
 	return pNode;
 }
 
@@ -276,15 +277,11 @@ void InsertNodeDGQuaHan(ListDGQuaHan &list, NodeDGQuaHan *pInsert) {
 	NodeDGQuaHan *pNode=list.pFirst;//Neu Node Insert co so ngay muon la lon nhat: them vao dau list
 	if(pNode==NULL) {
 		list.pFirst=pInsert;
-//		std::cout<<"\ncheck insert node";
-//		return;
-	} else {
-//		std::cout<<"\ncheck insert node 1";
+	} else {//Them Node Insert vao truoc node co so ngay muon be hon
 		while(pNode->next!=NULL) {
 			pNode=pNode->next;
 		}
 		pNode->next=pInsert;
-//		std::cout<<"\ncheck insert node 2";
 	}
 }
 
@@ -292,7 +289,7 @@ void InsertNodeDGQuaHan(ListDGQuaHan &list, NodeDGQuaHan *pInsert) {
 int GetListDGQuaHan(Tree root, ListDGQuaHan &list) {
 	list.pFirst=NULL;
 	list.n=0;
-	const int STACKSIZE = 500, HanMuon=7;
+	const int STACKSIZE = 500;
 	NodeBST *Stack[STACKSIZE];
 	NodeBST *pNode;
 	pNode=root;
@@ -303,37 +300,23 @@ int GetListDGQuaHan(Tree root, ListDGQuaHan &list) {
 		Stack[++sp] = pNode;
 		pNode = pNode->pLeft;
 		}
+		std::cout<<"\ncheck sp:"<<sp;
 		if(sp != -1) {
 			pNode = Stack[sp--];//Pop stack
-//			std::cout<<"\ncheck pNode info:"<<pNode->data.MATHE;
 			if(pNode->data.listMT!=NULL) {//Neu doc gia tung muon sach trong thu vien
 				NodeMuonTra *pCheck;
 				
-				if(pNode==NULL) {
-					std::cout<<"\nnode ko ton tai";
-				}else if(pNode->data.listMT==NULL) {
-					std::cout<<"\nlist MT ko ton tai; node:"<<pNode->data.MATHE;
-				}
-				
 				pCheck=pNode->data.listMT->pFirst;
-				if(pCheck==NULL) {
-					std::cout<<"\npCheck ko ton tai; node:"<<pNode->data.MATHE;
-				} else {
-					std::cout<<"\ncheck list muon tra doc gia:"<<pNode->data.MATHE;
-				}
 				NodeMuonTra *pQuaHan;
 				int NgayMuon=0;
 				while(pCheck!=NULL) {//Neu Doc gia chua tra sach thi tinh so ngay da muon
-//					std::cout<<"\nsach:"<<pCheck->data.maSach<<", ngay muon:"<<pCheck->data.ngayMuon.ngay
-//					<<", nam tra:"<<pCheck->data.ngayTra.nam;
 					if(pCheck->data.ngayTra.nam==0 && getDifference(today, pCheck->data.ngayMuon)>NgayMuon) {
 						NgayMuon=getDifference(today, pCheck->data.ngayMuon);
 					}
 					pCheck=pCheck->next;
 				}
-				if(NgayMuon>HanMuon) {//Neu So ngay muon lon hon 7 thi them vao ListDGQuaHan
-					std::cout<<"\ncheck so ngay muon: "<<NgayMuon;
-					InsertNodeDGQuaHan(list, CreateNodeDGQuaHan(pNode->data, NgayMuon-HanMuon));
+				if(NgayMuon>NGAYQUAHAN) {//Neu So ngay muon lon hon 7 thi them vao ListDGQuaHan
+					InsertNodeDGQuaHan(list, CreateNodeDGQuaHan(pNode->data, NgayMuon-NGAYQUAHAN));
 					list.n++;
 					count++;
 				}
@@ -349,6 +332,7 @@ int GetListDGQuaHan(Tree root, ListDGQuaHan &list) {
 	std::cout<<"\ncheck so doc gia qua han:"<<list.n;
 	return count;
 }
+
 void SwapNodeQuaHan(NodeDGQuaHan *p1, NodeDGQuaHan *p2) {
 	DocGia temp=p1->data;
 	int tmp=p1->soNgayQuaHan;
@@ -356,10 +340,9 @@ void SwapNodeQuaHan(NodeDGQuaHan *p1, NodeDGQuaHan *p2) {
 	p1->soNgayQuaHan=p2->soNgayQuaHan;
 	p2->data=temp;
 	p2->soNgayQuaHan=tmp;
-	std::cout<<"\ncheck swap";
 }
 
-void SortListDFQuaHan(ListDGQuaHan ListDGQH) {
+void SortListDFQuaHan(ListDGQuaHan ListDGQH) {//sap xep danh sach doc gia qua han theo thu tu ngay qua han giam dan
 	int n=ListDGQH.n;
 	bool isSwap;
 	NodeDGQuaHan *pNode, *pCheck=NULL;
@@ -372,16 +355,12 @@ void SortListDFQuaHan(ListDGQuaHan ListDGQH) {
 		pNode=ListDGQH.pFirst;
   
         while (pNode->next != pCheck) {
-        	std::cout<<"\ncheck 1";
             if (pNode->soNgayQuaHan < pNode->next->soNgayQuaHan) {
-            	std::cout<<"\ncheck 2";
                 SwapNodeQuaHan(pNode, pNode->next);
                 isSwap=true;
             }
             pNode = pNode->next;
-            std::cout<<"\ncheck 3";
         }
         pCheck = pNode;
     } while (isSwap);
-    std::cout<<"\ncheck sort";
 }
