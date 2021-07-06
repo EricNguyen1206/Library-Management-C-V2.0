@@ -1,14 +1,16 @@
 #pragma once
 #include <iostream>
 #include "define.h"
-#include "model.h"
-#include "model1.h"
 #include "local.h"
-#include "cautrucDocGia.h"
+#include "model.h"
+#include "View.h"
+//#include "model1.h"
+//#include "cautrucDocGia.h"
 	
-int DauSachController(int **MapId, int &x, int &y) {
+int DauSachController(int **MapId) {
 	std::cout<<"\ncheck dau sach";
 	char buffer[30];
+	int x, y;
 	int mode=0, /*mode = 0: mac dinh,mode = 1: tim kiem*/
 	begin=0, 
 	end, 
@@ -16,7 +18,6 @@ int DauSachController(int **MapId, int &x, int &y) {
 	NodeDMS *pNode;
 	DauSach *currentDS;
 	ArrPointerDauSach searchDS;
-	std::cout<<"\ncheck 1";
 	Button 	btnThemmoi			(MG+BLOCK*4, UNIT*3+MG*2, BLOCK*4, BLOCK, "Them moi", 			101);
 	Button 	btnDieuchinh		(ACTICLE-BLOCK*4, UNIT*3+MG*2, BLOCK*4, BLOCK, "Dieu chinh", 	102);
 	Button 	btnTimkiem			(w-BLOCK*3-MG,  UNIT*3+MG*2, BLOCK*3, BLOCK, "Tim", 			103);
@@ -38,7 +39,6 @@ int DauSachController(int **MapId, int &x, int &y) {
 	EditText edSoLuong		(BLOCK, YDS[4]-BLOCK-MG, BLOCK*7-MG, BLOCK, "So luong :","","Tu 1-999", 			118);
 	EditText edViTri		(BLOCK, YDS[5]+MG*2, BLOCK*7-MG, BLOCK, "Vi tri :","","Toi da 25 so va ky tu", 		119);
 	EditText edMaSach		(BLOCK, YDS[1], BLOCK*7-MG, BLOCK, "Ma sach:", "", "", 								163);
-	std::cout<<"\ncheck 2";
 	refreshMainLayout(MapId);
 	drawHeader(MapId, 1);
 	edTimDauSach.draw(MapId);
@@ -48,12 +48,9 @@ int DauSachController(int **MapId, int &x, int &y) {
 	btnThemmoi.draw(MapId);
 	btnTimkiem.draw(MapId);
 	btnExit.draw(MapId);
-	std::cout<<"\ncheck 2.1";
 	SortDS(ArrDauSach);
 	end=13;
-	std::cout<<"\ncheck 2.2";
 	ViewDSTable(ArrDauSach, begin, end, MapId);
-	std::cout<<"\ncheck 3";
 	while(1) {
 		delay(0.0001);
         if (ismouseclick(WM_LBUTTONDOWN)){

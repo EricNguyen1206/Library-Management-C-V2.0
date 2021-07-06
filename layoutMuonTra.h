@@ -1,12 +1,14 @@
 #pragma once
 #include "model.h"
+#include "View.h"
 #include "local.h"
 #include "define.h"
-#include "layoutDauSach.h"
-#include "cautrucDocGia.h"
+//#include "layoutDauSach.h"
+//#include "cautrucDocGia.h"
 
-int MuonTraController(int **MapId, int &x, int &y) {
+int MuonTraController(int **MapId) {
 	std::cout<<"\ncheck muon tra";
+	int x, y;
 	int lenDG=0, 
 	currentID=-1, 
 	currentPos=-1, 
@@ -85,6 +87,11 @@ int MuonTraController(int **MapId, int &x, int &y) {
             	case 150:
             	case 151:
             	case 152:
+            		if(edSearchDocGia.content[0] == '\0') {
+            			drawNotification();
+            			drawNotification(VuiLongNhapMaThe);
+            			break;
+					}
             		currentNodeDMS=GetNodeDmsInDauSach(currentDS, MapId[y][x]-140);
             		edGioiTinhDocGia.deleteEdText(MAIN_COLOR, MapId);
             		edSearchISBN.deleteEdText(MAIN_COLOR, MapId);
@@ -99,6 +106,7 @@ int MuonTraController(int **MapId, int &x, int &y) {
             		btnChangeDS.draw(MapId);
             		
             		sachMuon = GetSoSachMuonDG(currentDG);
+            		std::cout<<"\ncheck so sach muon:"<<sachMuon;
             		if(sachMuon>=3 
 					|| currentDG->trangthai==KHOA 
 					|| currentNodeDMS->data.TrangThai!=CHOMUONDUOC) {
@@ -243,9 +251,10 @@ int MuonTraController(int **MapId, int &x, int &y) {
 				case 314:
 					break;
 				case 315://nhap isbn sach can tim
-					if(edSearchISBN.content[0] == '\0') {
-	            			drawNotification(VuiLongNhapMaThe);
-	            			break;
+					if(edSearchDocGia.content[0] == '\0') {
+						drawNotification();
+            			drawNotification(VuiLongNhapMaThe);
+            			break;
 					}
 					ScanNumber(edSearchISBN, 5, MapId);
 					break;

@@ -1,17 +1,19 @@
 #pragma once
 #include "model.h"
+#include "View.h"
 #include "local.h"
 #include "define.h"
-#include "layoutDauSach.h"
-#include "cautrucDocGia.h"
-#include "model1.h"
-#include <iostream>
-#include <string>
+//#include "layoutDauSach.h"
+//#include "cautrucDocGia.h"
+//#include "model1.h"
+//#include <iostream>
+//#include <string>
 #include <stdlib.h>
 
-int DocGiaController(int **MapId, int &x, int &y) {
-	std::cout<<"\ncheck doc gia";
+int DocGiaController(int **MapId) {
+//	std::cout<<"\ncheck doc gia";
 	char buffer[30];
+	int x, y;
 	int lenDG=0, 
 	begin=0, 
 	end, 
@@ -345,7 +347,6 @@ int DocGiaController(int **MapId, int &x, int &y) {
 	            		btnFilterName.deleteBtn(BG_COLOR, MapId);
 	            		btnBackTable.isLock=true;
 	            		btnNextTable.isLock=ListDGQH.n<=13?true:false;
-	            		std::cout<<"\ncheck lenDg:"<<ListDGQH.n;
 	            		btnNextTable.draw(MapId);
 	            		btnBackTable.draw(MapId);
             			page=0;
@@ -360,7 +361,6 @@ int DocGiaController(int **MapId, int &x, int &y) {
 	            		btnFilterName.draw(MapId);
 	            		btnBackTable.isLock=true;
 	            		btnNextTable.isLock=lenDG<=13?true:false;
-	            		std::cout<<"\ncheck lenDg:"<<lenDG;
 	            		btnBackTable.draw(MapId);
 	            		btnNextTable.draw(MapId);
 	            		begin=0;

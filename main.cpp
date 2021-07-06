@@ -1,14 +1,17 @@
 #include <winbgim.h>
 #include <iostream>
-#include <fstream>
-#include <string>
+//#include <fstream>
+//#include <string>
 #include <cmath>
 #include "define.h"
 #include "model.h"
+#include "View.h"
+#include "AccessFile.h"
 #include "layoutDauSach.h"
 #include "layoutDocGia.h"
 #include "layoutMuonTra.h"
-#include "model1.h"
+//#include "cautrucDocgia.h"
+//#include "model1.h"
 
 using namespace std;
 
@@ -24,6 +27,8 @@ int main(int argc, char *argv[])
 		MapId[i] = new int[w];
 	}
 	resetMapID(MapId);
+//	ArrPointerDauSach ArrDauSach;
+//	Tree CayDocGia=NULL;
 	
 	Button btnRouteDauSach(w/2-BLOCK*5, BLOCK*3, BLOCK*10, BLOCK*2, DauSachTitle, 1);
 	Button btnRouteDocGia(w/2-BLOCK*5, BLOCK*6, BLOCK*10, BLOCK*2, DocGiaTitle, 2);
@@ -48,7 +53,7 @@ int main(int argc, char *argv[])
             	case 1:
             		label_1:
             		drawBox(0, 0, w, h, BG_COLOR);
-            		Router = DauSachController(MapId, x, y);
+            		Router = DauSachController(MapId);
             		if(Router == 2) {
             			goto label_2;
 					} else if(Router == 3) {
@@ -61,7 +66,7 @@ int main(int argc, char *argv[])
             	case 2:
             		label_2:
             		drawBox(0, 0, w, h, BG_COLOR);
-            		Router = DocGiaController(MapId, x, y);
+            		Router = DocGiaController(MapId);
             		if(Router == 1) {
             			goto label_1;
 					} else if(Router == 3) {
@@ -72,7 +77,7 @@ int main(int argc, char *argv[])
             	case 3:
             		label_3:
             			drawBox(0, 0, w, h, BG_COLOR);
-            		Router = MuonTraController(MapId, x, y);
+            		Router = MuonTraController(MapId);
             		if(Router == 1) {
             			goto label_1;
 					} else if(Router == 2) {
