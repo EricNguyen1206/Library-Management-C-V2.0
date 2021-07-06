@@ -447,6 +447,7 @@ int GetChuaMuon(DauSach *dausach) {
 		if(pNode->data.TrangThai==0) {
 			count++;
 		}
+		pNode=pNode->next;
 	}
 	return count;
 }
@@ -664,6 +665,28 @@ NodeMuonTra *GetNodeMTById(ListMT *listMT, int index) {
 		pNode=pNode->next;
 	}
 	return pNode;
+}
+
+NodeDMS *GetNodeDmsInListMT(NodeMuonTra *mt, ArrPointerDauSach dsds) {
+	char isbn[10];
+//	std::cout<<"\ncheck 1";
+	for(int i=0; i<5; i++) {
+		isbn[i]=mt->data.maSach[i];
+	}
+//	std::cout<<"\ncheck 2";
+	dsds.dsDauSach;
+	DauSach *resDS;
+	resDS = SearchDauSachByIsbn(dsds, isbn);
+	NodeDMS *nodeRes=resDS->listDMS->pFirst;
+//	std::cout<<"\ncheck 3";
+	while(nodeRes!=NULL) {
+		if(strcmp(nodeRes->data.MaSach, mt->data.maSach.c_str())) {
+//			std::cout<<"\ncheck get node dms";
+			return nodeRes;
+		}
+		nodeRes=nodeRes->next;
+	}
+	return NULL;
 }
 
 void DeleteFirstListMuonTra(ListMT *&listMT) {

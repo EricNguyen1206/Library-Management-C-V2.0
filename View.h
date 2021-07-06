@@ -409,7 +409,7 @@ void ViewDGTable(DocGia *ListDG, int begin, int end, int **MapId) {
 		row++;
 		Y+=BLOCK;
 	}
-	cout << "\ncheck ham in doc gia";
+//	cout << "\ncheck ham in doc gia";
 }
 
 void ViewDSTable(ArrPointerDauSach ArrDauSach, int begin, int end, int **MapId) {
@@ -438,7 +438,7 @@ void ViewDSTable(ArrPointerDauSach ArrDauSach, int begin, int end, int **MapId) 
 		row++;
 		Y+=BLOCK;
 	}
-	std::cout << "\ncheck ham in dau sach";
+//	std::cout << "\ncheck ham in dau sach";
 }
 
 void ViewDanhMucTable(ListDMS *listDMS, int begin, int end, int **MapId) {
@@ -446,7 +446,6 @@ void ViewDanhMucTable(ListDMS *listDMS, int begin, int end, int **MapId) {
 	int X;
 	int Y=HEADER+BLOCK+MG;
 	char buffer [30];
-	NodeDMS *nodeDMS=listDMS->pFirst;
 	drawTable(MapId, tableTitleDanhMuc, tableTitleWidthDanhMuc, 3);
 	setcolor(0);
 	setbkcolor(MAIN_COLOR);
@@ -458,12 +457,12 @@ void ViewDanhMucTable(ListDMS *listDMS, int begin, int end, int **MapId) {
 			outtextxy(X, Y, pNode->data.MaSach);
 			outtextxy(X+100, Y, TrangThaiSach[pNode->data.TrangThai]);
 			outtextxy(X+400, Y, pNode->data.ViTri.c_str());
-			pNode=pNode->next;
 			setId(MapId, ACTICLE+MG, Y, TABLE_W, BLOCK, 140+i-begin);
 			Y+=BLOCK;
 		}
+		pNode=pNode->next;
 	}
-	std::cout << "\ncheck ham in dau sach";
+//	std::cout << "\nin danh muc sach";
 }
 
 void ViewSachMuonTable(DocGia docgia, int **MapId) {

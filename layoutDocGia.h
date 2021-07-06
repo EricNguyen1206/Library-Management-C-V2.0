@@ -3,11 +3,6 @@
 #include "View.h"
 #include "local.h"
 #include "define.h"
-//#include "layoutDauSach.h"
-//#include "cautrucDocGia.h"
-//#include "model1.h"
-//#include <iostream>
-//#include <string>
 #include <stdlib.h>
 
 int DocGiaController(int **MapId) {
@@ -157,7 +152,7 @@ int DocGiaController(int **MapId) {
 					break;
 				case 205://Button back
 					if(btnBackTable.isLock) break;
-					if(btnListDGQuaHan.isChoose) {
+					if(btnListDGQuaHan.isLock) {
 						if(page==0) {
 							break;
 						}
@@ -186,13 +181,13 @@ int DocGiaController(int **MapId) {
 					break;
 				case 206://Button next
 					if(btnNextTable.isLock) break;
-					if(btnListDGQuaHan.isChoose) {
-						if(page*13 >= (ListDGQH.n-1)/13) {
+					if(btnListDGQuaHan.isLock) {
+						if((page+1)*13 >= (ListDGQH.n-1)) {
 							break;
 						}
 						page++;
 						ViewDocGiaQuaHan(ListDGQH, page, MapId);
-						if(page*13 >= (ListDGQH.n-1)/13) {
+						if((page+1)*13 >= (ListDGQH.n-1)) {
 							btnNextTable.isLock=true;
 							btnNextTable.draw(MapId);
 						}

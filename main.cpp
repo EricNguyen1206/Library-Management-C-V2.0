@@ -1,7 +1,5 @@
 #include <winbgim.h>
 #include <iostream>
-//#include <fstream>
-//#include <string>
 #include <cmath>
 #include "define.h"
 #include "model.h"
@@ -10,11 +8,7 @@
 #include "layoutDauSach.h"
 #include "layoutDocGia.h"
 #include "layoutMuonTra.h"
-//#include "cautrucDocgia.h"
-//#include "model1.h"
-
 using namespace std;
-
 
 int main(int argc, char *argv[])
 {
@@ -27,8 +21,6 @@ int main(int argc, char *argv[])
 		MapId[i] = new int[w];
 	}
 	resetMapID(MapId);
-//	ArrPointerDauSach ArrDauSach;
-//	Tree CayDocGia=NULL;
 	
 	Button btnRouteDauSach(w/2-BLOCK*5, BLOCK*3, BLOCK*10, BLOCK*2, DauSachTitle, 1);
 	Button btnRouteDocGia(w/2-BLOCK*5, BLOCK*6, BLOCK*10, BLOCK*2, DocGiaTitle, 2);

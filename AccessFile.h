@@ -1,5 +1,4 @@
 #pragma once
-//#include "cautrucDocGia.h"
 #include <iostream>
 #include <fstream>
 
@@ -76,8 +75,8 @@ int LoadFileDanhMucSach(ArrPointerDauSach &ArrDauSach) {
 		listDMS=new ListDMS;
 		InitListDMS(listDMS);
 		lenDms=ArrDauSach.dsDauSach[i]->soLuong;
-		if(i==0)
-			FileIn.ignore();
+//		if(i==0)
+//			FileIn.ignore();
 		for(int j=0; j<lenDms; j++) {
 			string vitri, masach;
 			dms = new danhMucSach;

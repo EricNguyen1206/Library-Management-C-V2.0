@@ -14,7 +14,8 @@ int DauSachController(int **MapId) {
 	int mode=0, /*mode = 0: mac dinh,mode = 1: tim kiem*/
 	begin=0, 
 	end, 
-	pos;
+	pos,
+	pageDMS=0;
 	NodeDMS *pNode;
 	DauSach *currentDS;
 	ArrPointerDauSach searchDS;
@@ -144,7 +145,26 @@ int DauSachController(int **MapId) {
             		mode=1;//mode = 0: mac dinh,mode = 1: tim kiem
             		break;
             	case 104://Quay ve trang truoc
-            		if(begin>0 && !btnBackTable.isLock) {
+            		if(btnBackTable.isLock) break;
+					if(btnDanhMucSach.isLock) {
+            			if(pageDMS<=0) {
+            				break;
+						}
+						else {
+							pageDMS--;
+							int begDMS=pageDMS*13;
+							int endDMS=currentDS->soLuong>begDMS+13?begDMS+13:begDMS+currentDS->soLuong%13;
+							ViewDanhMucTable(currentDS->listDMS, begDMS, endDMS,MapId);
+							if(pageDMS<=0) {
+								btnBackTable.isLock=true;
+								btnBackTable.draw(MapId);
+							}
+							btnNextTable.isLock=false;
+							btnNextTable.draw(MapId);
+						}
+						break;
+					}
+            		if(begin>0) {
 						begin-=13;
 						end -= end%13==0 ? 13 : ArrDauSach.n%13;
 						if(begin==0) {
@@ -157,7 +177,26 @@ int DauSachController(int **MapId) {
 					} 
             		break;
             	case 105://Trang ke tiep
-            		if(end < ArrDauSach.n && !btnNextTable.isLock) {
+            		if(btnNextTable.isLock) break;
+					if(btnDanhMucSach.isLock) {
+            			if((pageDMS+1)*13>=(currentDS->soLuong-1)) {
+            				break;
+						}
+						else {
+							pageDMS++;
+							int begDMS=pageDMS*13;
+							int endDMS=currentDS->soLuong>begDMS+13?begDMS+13:begDMS+currentDS->soLuong%13;
+							ViewDanhMucTable(currentDS->listDMS, begDMS, endDMS,MapId);
+							if((pageDMS+1)*13>=(currentDS->soLuong-1)) {
+								btnNextTable.isLock=true;
+								btnNextTable.draw(MapId);
+							}
+							btnBackTable.isLock=false;
+							btnBackTable.draw(MapId);
+						}
+						break;
+					}
+					if(end < ArrDauSach.n) {
 						begin+=13;
 						if(ArrDauSach.n-end<13) {
 							end+=ArrDauSach.n-end;
@@ -236,13 +275,22 @@ int DauSachController(int **MapId) {
 					}
             		break;
 				case 107://in danh muc sach
-					{	PrintDMS:
+					PrintDMS:
+					pageDMS=0;
+					{	
 						int tmp1=0, tmp2=(currentDS->soLuong<=13?currentDS->soLuong:13);
 						btnDanhMucSach.isLock=true;
 						btnDanhMucSach.draw(MapId);
 						ViewDanhMucTable(currentDS->listDMS, tmp1, tmp2,MapId);
-						btnNextTable.deleteBtn(BG_COLOR, MapId);
-						btnBackTable.deleteBtn(BG_COLOR, MapId);
+						if(currentDS->soLuong<=13) {
+							btnNextTable.deleteBtn(BG_COLOR, MapId);
+							btnBackTable.deleteBtn(BG_COLOR, MapId);
+						} else {
+							btnNextTable.isLock=false;
+							btnBackTable.isLock=true;
+							btnNextTable.draw(MapId);
+							btnBackTable.draw(MapId);
+						}
 					}
             		break;
 				case 108://xoa dau sach
@@ -292,7 +340,11 @@ int DauSachController(int **MapId) {
 						edThemNXB.draw(MapId);
 						edThemTheLoai.draw(MapId);
 						drawNotification();
+						begin=0;
+						end=13;
 						ViewDSTable(ArrDauSach, begin, end, MapId);
+						btnBackTable.isLock=true;
+						btnNextTable.isLock=false;
 						btnBackTable.draw(MapId);
 						btnNextTable.draw(MapId);
 	            		break;
