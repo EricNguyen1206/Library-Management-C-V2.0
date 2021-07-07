@@ -571,8 +571,12 @@ DauSach *SearchIsbn(ArrPointerDauSach dsds, char ISBN[]) {
 	}
 }
 
-bool CheckTrungMax(DauSach *ArrDS[], int lenArr, char isbn[]) {
+bool CheckTrungMax(DauSach *ArrDS[], int lenArr, char isbn[]) {//Neu dau sach da ton tai trong mang tra ve false
 	for(int i=0; i<lenArr; i++) {
+//		if(lenArr=9) {
+//			std::cout<<"\ncheck trung"<<i<<": "<<isbn;
+//			std::cout<<" vs"<<ArrDS[i]->ISBN;
+//		}
 		if(strcmp(ArrDS[i]->ISBN, isbn)==0) {
 			return false;
 		}
@@ -584,11 +588,13 @@ void GetTopTenDauSach(ArrPointerDauSach dsds, DauSach *ArrDS[]) {
 	int i, j, n=dsds.n;
 	for(i=0; i<10; i++) {
 		DauSach *max = dsds.dsDauSach[0];
-		for(j=0; j<n; j++) {
-			if(max->luotMuon<dsds.dsDauSach[j]->luotMuon && CheckTrungMax(ArrDS, i, dsds.dsDauSach[j]->ISBN)) {
-				max=dsds.dsDauSach[j];
+		for(j=1; j<n; j++) {
+			if(max->luotMuon<dsds.dsDauSach[j]->luotMuon) {
+				if(CheckTrungMax(ArrDS, i, dsds.dsDauSach[j]->ISBN))
+					max=dsds.dsDauSach[j];
 			}
 		}
+		std::cout<<"\ncheck dau sach:"<<max->ISBN;
 		ArrDS[i]=max;
 	}
 }
@@ -597,8 +603,11 @@ void GetTopTenDauSach(ArrPointerDauSach dsds, DauSach *ArrDS[]) {
 // ---------- Handle MuonTra's structure function ------------
 int GetSoSachMuonDG(DocGia *docgia) {
 	int count=0;
+	if(docgia->listMT==NULL) {
+		return 0;
+	}
 	NodeMuonTra *pNode=docgia->listMT->pFirst;
-	while(pNode) {
+	while(pNode!=NULL) {
 		if(pNode->data.trangThai==0) {
 			count ++;
 		}
@@ -612,6 +621,12 @@ NodeMuonTra *CreateNodeMT(MuonTra mt) {
 	pNode->data=mt;
 	pNode->next = NULL;
 	return pNode;
+}
+
+ListMT *CreateListMT() {
+	ListMT *listMT = new ListMT;
+	listMT->pFirst=NULL;
+	return listMT;
 }
 void InsertLastListMuonTra(ListMT *&listMT, MuonTra mt) {
 	NodeMuonTra *pInsert = CreateNodeMT(mt);
@@ -632,6 +647,8 @@ int FindIndexDocGiaInArr(DocGia ListDG[], int mathe) {
 			return i;
 		}
 	}
+	std::cout<<"\nko tim thay doc gia trong mang";
+	return -1;
 }
 
 NodeBST *FindNodeBSTById(Tree root, int IdDocGia) {
@@ -653,7 +670,7 @@ NodeBST *FindNodeBSTById(Tree root, int IdDocGia) {
 			}
 			pNode = pNode->pRight;
 		} else {
-			std::cout<<"\nko tim thay doc gia:" << IdDocGia;
+//			std::cout<<"\nko tim thay doc gia:" << IdDocGia;
 			break;
 		}//sp=-1: Stack rong thi dung
 	}while (1);
@@ -774,14 +791,14 @@ void SortDGByIndex(DocGia arr[]) {
 				temp=arr[i];
 				arr[i]=arr[j];
 				arr[j]=temp;
-				std::cout<<"\ndocgia "<<i<<" co ma the la:"<<arr[i].MATHE;
+//				std::cout<<"\ndocgia "<<i<<" co ma the la:"<<arr[i].MATHE;
 				dem++;
 				break;
 			}
 		}
-		std::cout<<"||doc gia rac"<<i<<" co ma the rac la:"<<arr[i].MATHE;
+//		std::cout<<"||doc gia rac"<<i<<" co ma the rac la:"<<arr[i].MATHE;
 	}
-	std::cout<<"\ncheck sort "<<dem<<" doc gia";
+//	std::cout<<"\ncheck sort "<<dem<<" doc gia";
 }
 
 void FreeMemoryBST(Tree root) {

@@ -296,6 +296,7 @@ int DauSachController(int **MapId) {
 				case 108://xoa dau sach
 					if(currentDS->luotMuon!=0) {
 						drawNotification(KhongDuocXoaSachNay);
+						break;
 					}
 					edThemISBN.clear();
 					edThemTenSach.clear();

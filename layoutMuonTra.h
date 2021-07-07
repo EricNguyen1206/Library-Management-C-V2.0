@@ -96,14 +96,15 @@ int MuonTraController(int **MapId) {
             			drawNotification(VuiLongNhapMaThe);
             			break;
 					}
-            		currentNodeDMS=GetNodeDmsInDauSach(currentDS, MapId[y][x]-140);
+					std::cout<<"\ncheck pageDMS:"<<pageDMS;
+            		currentNodeDMS=GetNodeDmsInDauSach(currentDS, pageDMS*13+MapId[y][x]-140);
             		edGioiTinhDocGia.deleteEdText(MAIN_COLOR, MapId);
             		edSearchISBN.deleteEdText(MAIN_COLOR, MapId);
             		btnSearchDauSach.deleteBtn(MAIN_COLOR, MapId);
             		
             		strcpy(edTenSachMuon.content, currentDS->tenSach.c_str());
             		strcpy(edMaSachMuon.content, currentNodeDMS->data.MaSach);
-            		
+            		std::cout<<"\ncheck a1";
             		drawNotification();
             		edTenSachMuon.draw(MapId);
             		edMaSachMuon.draw(MapId);
@@ -120,6 +121,7 @@ int MuonTraController(int **MapId) {
 					} else {
 						btnXacNhanMuon.isLock=false;
 					}
+					std::cout<<"\ncheck a2";
             		btnXacNhanMuon.draw(MapId);
             		break;
             	case 200://chuyen sang layoutDocGia
@@ -165,12 +167,22 @@ int MuonTraController(int **MapId) {
             			drawNotification(VuiLongNhapLai);
             			break;
 					}
+					std::cout<<"\ncheck 1";
 					drawNotification();
             		btnSearchDocGia.deleteBtn(MAIN_COLOR, MapId);
+            		std::cout<<"\ncheck 2";
             		btnRefreash.draw(MapId);
             		currentID=atoi(edSearchDocGia.content);
             		currentPos=FindIndexDocGiaInArr(ArrDG, currentID);
+            		if(currentPos==-1) {
+            			drawNotification(KhongTimThayDocGia);
+            			break;
+					}
+					if(ArrDG[currentPos].listMT==NULL || ArrDG[currentPos].listMT->pFirst==NULL) {
+						drawNotification(DocGiaChuaMuonSachNao);
+					}
             		currentDG=&ArrDG[currentPos];
+            		std::cout<<"\ncheck 3";
             		itoa(currentPos, buffer, 10);
             		strcpy(edNameDocGia.content, (ArrDG[currentPos].ho + " " + ArrDG[currentPos].ten).c_str());
             		strcpy(edMaTheDocGia.content, buffer);
@@ -180,8 +192,11 @@ int MuonTraController(int **MapId) {
 					edTrangThaiTheDocGia.draw(MapId);
             		edNameDocGia.draw(MapId);
 					edMaTheDocGia.draw(MapId);
-            		if(btnTraSach.isChoose) {
+            		if(btnTraSach.isChoose && ArrDG[currentPos].listMT!=NULL && ArrDG[currentPos].listMT->pFirst!=NULL) {
+            			std::cout<<"\ncheck 4:"<<currentPos;
+            			
             			ViewSachMuonTable(ArrDG[currentPos], MapId);
+            			std::cout<<"\ncheck 5:";
 					}
             		break;
             	case 305:// xoa noi dung tim kiem
@@ -245,8 +260,8 @@ int MuonTraController(int **MapId) {
             			break;
 					}
             		btnXacNhanMuon.deleteBtn(BG_COLOR, MapId);
-            		btnBackTable.deleteBtn(BG_COLOR, MapId);
-            		btnNextTable.deleteBtn(BG_COLOR, MapId);
+//            		btnBackTable.deleteBtn(BG_COLOR, MapId);
+//            		btnNextTable.deleteBtn(BG_COLOR, MapId);
 //            		if(btnMuonSach.isChoose) {
 //            			if(btnXacNhanMuon.isLock) {
 //            				drawNotification(KhongDuocMuonSachNay);
@@ -264,20 +279,22 @@ int MuonTraController(int **MapId) {
 						mt.ngayTra.ngay=0;
 						mt.ngayTra.thang=0;
 						mt.ngayTra.nam=0;
+						if(currentDG->listMT==NULL) {
+							currentDG->listMT=CreateListMT();
+						}
 						InsertLastListMuonTra(currentDG->listMT, mt);
-						std::cout<<"\ncheck 4";
+						std::cout<<"\ncheck list mt:"<<currentDG->listMT->pFirst->data.maSach;
 						if(currentDG->lichsumuon<MAXLICHSUMUON) {
-							currentDG->lichsumuon;
+//							currentDG->lichsumuon;
 						} else {
 							DeleteFirstListMuonTra(currentDG->listMT);
 						}
 						std::cout<<"\ncheck 5";
 //					}
-					pageDMS=0;
-					begDMS=pageDMS*13;
-					endDMS=currentDS->soLuong>13?13:currentDS->soLuong;
+//					pageDMS=0;
+//					begDMS=pageDMS*13;
+//					endDMS=currentDS->soLuong>13?13:currentDS->soLuong;
 					ViewDanhMucTable(currentDS->listDMS, begDMS, endDMS, MapId);
-//					ViewDanhMucTable(currentDS->listDMS, 0, currentDS->soLuong,MapId);
 					std::cout<<"\ncheck 6";
             		break;
             	case 310:// Nhap ma the

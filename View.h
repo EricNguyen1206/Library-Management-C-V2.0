@@ -466,20 +466,33 @@ void ViewDanhMucTable(ListDMS *listDMS, int begin, int end, int **MapId) {
 }
 
 void ViewSachMuonTable(DocGia docgia, int **MapId) {
+	std::cout<<"\ncheck a";
 	int X;
 	int Y=HEADER+BLOCK+MG;
-	NodeMuonTra *pNode=docgia.listMT->pFirst;
+	NodeMuonTra *pNode;
+	if(docgia.listMT==NULL) {
+		std::cout<<"\ndoc gia chua muon sach";
+	}
+	if(docgia.listMT->pFirst==NULL) {
+		std::cout<<"\ndoc gia chua muon sach2";
+	}
+	pNode=docgia.listMT->pFirst;
+	std::cout<<"\ncheck ay";
 	string date;
 	char buffer[30];
+	std::cout<<"\ncheck ax";
 	drawTable(MapId, tableTitleMuonTra, tableTitleWidthMuonTra, 4);
 	setcolor(0);
 	setbkcolor(MAIN_COLOR);
 	settextstyle(TEXT_FONT, 0, 2);
 	int count=0;
+	std::cout<<"\ncheck a";
 	while(pNode!=NULL) {
+		std::cout<<"\ncheck a1";
 		X=ACTICLE+MG*2;
 		setId(MapId, X, Y, TABLE_W, BLOCK, 330+count);
 		outtextxy(X, Y, pNode->data.maSach.c_str());
+		std::cout<<"\ncheck a2";
 		date = (
 			string(itoa(pNode->data.ngayMuon.ngay, buffer, 10)) + "/" 
 			+ string(itoa(pNode->data.ngayMuon.thang, buffer, 10)) + "/" 
@@ -491,6 +504,7 @@ void ViewSachMuonTable(DocGia docgia, int **MapId) {
 			+ string(itoa(pNode->data.ngayTra.thang, buffer, 10)) + "/" 
 			+ string(itoa(pNode->data.ngayTra.nam, buffer, 10))
 		);
+		std::cout<<"\ncheck a3";
 		outtextxy(X+=tableTitleWidthMuonTra[1], Y, date.c_str());
 		outtextxy(X+=tableTitleWidthMuonTra[2], Y, TTMuonTra[pNode->data.trangThai]);
 		Y+=BLOCK;
