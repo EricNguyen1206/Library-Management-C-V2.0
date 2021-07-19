@@ -50,6 +50,7 @@ char ThemDocGiaThanhCong[]		= "THEM DOC GIA THANH CONG!";
 char XoaDocGiaThanhCong[]		= "XOA DOC GIA THANH CONG!";
 char KhongDuocXoaSachNay[]		= "KHONG DUOC XOA SACH NAY!";
 char KhongDuocMuonSachNay[]		= "KHONG DUOC MUON SACH NAY!";
+char KhongXoaDocGiaMuonSach[]	= "KHONG XOA DOC GIA DANG MUON SACH!";
 char KhongTimThaySach[]			= "KHONG TIM THAY SACH :(";
 char KhongTimThayDocGia[]       = "KHONG TIM THAY DOC GIA :(";
 char SachDaDuocMuonHet[]		= "SACH DA DUOC MUON HET :(";
@@ -73,7 +74,6 @@ char MuonSach[] 				= "MUON SACH";
 char TraSach[] 					= "TRA SACH";
 char TopTen[] 					= "TOP 10 CUON SACH MUON NHIEU NHAT";
 char DSDM[] 					= "CAC SACH DANG MUON";
-
 
 
 

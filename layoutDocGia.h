@@ -24,7 +24,7 @@ int DocGiaController(int **MapId) {
 	
 	CreateDocGiaArr(CayDocGia, ListDG, lenDG);
 	GetListDGQuaHan(CayDocGia, ListDGQH);
-	SortListDFQuaHan(ListDGQH);
+	SortListDgQuaHan(ListDGQH);
 	
 	Button 	btnThemDocGia		(MG, UNIT*3+MG*2, BLOCK*4, BLOCK, "Them moi", 					201);
 	Button 	btnDieuChinhDocGia	(ACTICLE-BLOCK*4, UNIT*3+MG*2, BLOCK*4, BLOCK, "Dieu chinh", 	202);
@@ -152,7 +152,7 @@ int DocGiaController(int **MapId) {
 					break;
 				case 205://Button back
 					if(btnBackTable.isLock) break;
-					if(btnListDGQuaHan.isLock) {
+					if(btnListDGQuaHan.isChoose) {
 						if(page==0) {
 							break;
 						}
@@ -181,13 +181,13 @@ int DocGiaController(int **MapId) {
 					break;
 				case 206://Button next
 					if(btnNextTable.isLock) break;
-					if(btnListDGQuaHan.isLock) {
-						if((page+1)*13 >= (ListDGQH.n-1)) {
+					if(btnListDGQuaHan.isChoose) {
+						if((page+1)*13 >= (ListDGQH.n)) {
 							break;
 						}
 						page++;
 						ViewDocGiaQuaHan(ListDGQH, page, MapId);
-						if((page+1)*13 >= (ListDGQH.n-1)) {
+						if((page+1)*13 >= (ListDGQH.n)) {
 							btnNextTable.isLock=true;
 							btnNextTable.draw(MapId);
 						}
@@ -278,7 +278,16 @@ int DocGiaController(int **MapId) {
 						btnConditionBlocked.isChoose?KHOA:HOATDONG
 						);
 						end+=(end%13==0||end!=lenDG)?0:1;
-	            		InsertNode(CayDocGia, CreateNode(DocGiaNew));
+						p=CreateNode(DocGiaNew);
+						p->data.listMT=CreateListMT();
+						p->data.lichsumuon=0;
+	            		std::cout<<"\n check insert:"<<InsertNode(CayDocGia, p);
+	            		if(p->data.listMT==NULL) {
+	            			std::cout<<"\n the thi bo may chiu";
+						} else {
+							std::cout<<"\ncheck p:"<<p->data.MATHE;
+						}
+	            		
 	            		lenDG=0;
             			CreateDocGiaArr(CayDocGia, ListDG, lenDG);
             			lenDG--;
@@ -309,6 +318,10 @@ int DocGiaController(int **MapId) {
 					}
             		break;
             	case 215:
+            		if(GetSoSachMuonDG(&p->data)>0) {
+            			drawNotification(KhongXoaDocGiaMuonSach);
+            			break;
+					}
             		end-=(end%13==0&&end!=lenDG)?0:1;
             		DeleteNodeBST(CayDocGia, p);
             		lenDG=0;
@@ -316,7 +329,6 @@ int DocGiaController(int **MapId) {
         			mode = btnFilterId.isChoose ? MADOCGIA : HOTEN;
         			SortDG(ListDG, lenDG, mode);
         			
-//            		refreshTable(MapId, tableTitleWidthDocGia1, 5);
 	            	ViewDGTable(ListDG, begin, end, MapId);
 					btnConditionBlocked.deleteBtn(MAIN_COLOR, MapId);
             		btnConditionActive.deleteBtn(MAIN_COLOR, MapId);
@@ -342,6 +354,7 @@ int DocGiaController(int **MapId) {
 	            		btnFilterName.deleteBtn(BG_COLOR, MapId);
 	            		btnBackTable.isLock=true;
 	            		btnNextTable.isLock=ListDGQH.n<=13?true:false;
+	            		std::cout<<"\ncheck len listQH:"<<ListDGQH.n;
 	            		btnNextTable.draw(MapId);
 	            		btnBackTable.draw(MapId);
             			page=0;

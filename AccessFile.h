@@ -12,7 +12,6 @@ int LoadFileTheDocGia(Tree &Root) {
 	string tmp;
 	int readers = 0, count = 0;
 	FileIn >> readers;
-
 	while(!FileIn.eof() && count<readers) {
 		DocGia x;
 		count++;
@@ -22,6 +21,8 @@ int LoadFileTheDocGia(Tree &Root) {
 		getline(FileIn, x.ten);
 		FileIn >> x.phai;
 		FileIn >> x.trangthai;
+		x.listMT=CreateListMT();
+		x.lichsumuon=0;
 		NodeBST *p=CreateNode(x);
 		InsertNode(Root, p);
 	}
@@ -54,6 +55,7 @@ int LoadFileDauSach(ArrPointerDauSach &ArrDauSach) {
 		getline(FileIn, dausach->theLoai);//6
 		FileIn >> dausach->soLuong;//7
 		FileIn >> dausach->luotMuon;//8
+		std::cout<<"\ncheck luot muon:"<<dausach->luotMuon;
 		i+=InsertDauSach(ArrDauSach, dausach);
 	}
 	FileIn.close();
@@ -99,10 +101,12 @@ int LoadFileDanhMucSach(ArrPointerDauSach &ArrDauSach) {
 
 int LoadFileMuonTra(Tree &root) {
 	std::ifstream FileIn;
+	std::cout<<"\ncheck";
 	FileIn.open("DanhSachMuonTra.txt", ios::in);
 	if(FileIn.fail()) {
 		return -1;
 	}
+	std::cout<<"\ncheck";
 	string tmp;
 	int readers = 0, count = 0;
 	FileIn >> readers;
@@ -111,21 +115,28 @@ int LoadFileMuonTra(Tree &root) {
 	MuonTra mt;
 	NodeBST *pNode;
 	ListMT *listMuonTra;
+	std::cout<<"\ncheck 1";
 	while(!FileIn.eof() && count<readers) {
 		FileIn >> maDocGia;
 		FileIn >> lichsumuon;
-		listMuonTra = new ListMT;
-		listMuonTra->pFirst = NULL;
+//		listMuonTra = new ListMT;
+//		listMuonTra->pFirst = NULL;
+		std::cout<<"\ncheck 1.1";
+		if(pNode->data.listMT==NULL) {
+			std::cout<<"\nchua tao list mt";
+		}
+		
+		pNode=FindNodeBSTById(root, maDocGia);
 		for(int i=0; i<lichsumuon; i++) {
 			FileIn.ignore();
 			getline(FileIn, mt.maSach);
 			FileIn >> mt.ngayMuon.ngay >> mt.ngayMuon.thang >> mt.ngayMuon.nam;
 			FileIn >> mt.ngayTra.ngay >> mt.ngayTra.thang >> mt.ngayTra.nam;
 			FileIn >> mt.trangThai;
-			InsertLastListMuonTra(listMuonTra, mt);
+			InsertLastListMuonTra(pNode->data.listMT, mt);
 		}
-		pNode=FindNodeBSTById(root, maDocGia);
-		pNode->data.listMT=listMuonTra;
+		std::cout<<"\ncheck 2";
+//		pNode->data.listMT=listMuonTra;
 		pNode->data.lichsumuon=lichsumuon;
 		count++;
 	}
@@ -262,4 +273,3 @@ void SaveFileDanhMucSach(ArrPointerDauSach ArrDauSach){
 	file.close();
 	std::cout<<"\ncheck luu file danh muc sach";
 }
-

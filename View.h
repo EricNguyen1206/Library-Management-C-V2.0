@@ -263,7 +263,7 @@ int AppInfoController(int **MapId) {
 	outtextxy((w-textwidth("Giang vien"))/2, YDS[0], "Giang vien");
 	outtextxy((w-textwidth("LUU NGUYEN KY THU"))/2, YDS[0]+UNIT, "LUU NGUYEN KY THU");
 	outtextxy((w-textwidth("Sinh vien"))/2, YDS[1], "Sinh vien");
-	outtextxy((w-textwidth("NGUYEN TRONG TIN, NGUYEN THI NGAN"))/2, YDS[1]+UNIT, "NGUYEN TRONG TIN, NGUYEN THI NGAN");
+	outtextxy((w-textwidth("NGUYEN TRONG TIN"))/2, YDS[1]+UNIT, "NGUYEN TRONG TIN");
 	outtextxy((w-textwidth("De tai"))/2, YDS[2], "De tai");
 	outtextxy((w-textwidth("QUAN LY THU VIEN"))/2, YDS[2]+UNIT, "QUAN LY THU VIEN");
 	outtextxy((w-textwidth("----------O----------"))/2, h-BLOCK*6, "----------O----------");
