@@ -12,6 +12,7 @@ void setId(int **MapId, int x, int y, int width, int height, int Id);
 void drawBox(int x, int y, int width, int height, int color);
 void drawTitle(char title[], int align, int font_size);
 //void ViewStartScreen(Button routeDauSach, Button routeDocGia, Button routeMuonTra, Button ExitApp int **MapId);
+int AppInfoController(int **MapId);
 void drawHeader(int **MapId, int index);
 void refreshMainLayout(int **MapId);
 void drawActicle();
@@ -19,9 +20,16 @@ void drawActicle();
 //void drawNotification(char noti[]=NULL);
 void refreshTable(int **MapId, int widthArr[], int colNum);
 void drawTable(int **MapId, char title[][30], int widthArr[], int colNum);
+void ViewDGTable(DocGia *ListDG, int begin, int end, int **MapId);
+void ViewDSTable(ArrPointerDauSach ArrDauSach, int begin, int end, int **MapId);
+void ViewDanhMucTable(ListDMS *listDMS, int begin, int end, int **MapId);
+void ViewSachMuonTable(DocGia docgia, int **MapId);
+void ViewTopTenDauSachTable(DauSach *ArrTopTen[], int **MapId);
+void ViewDocGiaQuaHan(ListDGQuaHan list, int page, int **MapId);
 void printMapId(int **MapId, int x, int y, int width, int height);
 //void ScanString(EditText &EDIT, int maxlen, int **MapId);
 //void ScanNumber(EditText &EDIT, int maxlen, int **MapId);
+//ScanSearchDS(EditText &EDIT, int maxlen, ArrPointerDauSach dsds, ArrPointerDauSach &searchDS, int **MapId)
 
 struct Button{
 	int ID;
@@ -273,7 +281,7 @@ int AppInfoController(int **MapId) {
 		delay(0.0001);
         if (ismouseclick(WM_LBUTTONDOWN)){
             getmouseclick(WM_LBUTTONDOWN, x, y);
-            std::cout<<"\nleft click:"<<x<<" "<<y<<"="<<MapId[y][x];
+//            std::cout<<"\nleft click:"<<x<<" "<<y<<"="<<MapId[y][x];
             switch(MapId[y][x]) {
             	case -1:
             		return 0;
@@ -409,7 +417,6 @@ void ViewDGTable(DocGia *ListDG, int begin, int end, int **MapId) {
 		row++;
 		Y+=BLOCK;
 	}
-//	cout << "\ncheck ham in doc gia";
 }
 
 void ViewDSTable(ArrPointerDauSach ArrDauSach, int begin, int end, int **MapId) {
@@ -438,7 +445,6 @@ void ViewDSTable(ArrPointerDauSach ArrDauSach, int begin, int end, int **MapId) 
 		row++;
 		Y+=BLOCK;
 	}
-//	std::cout << "\ncheck ham in dau sach";
 }
 
 void ViewDanhMucTable(ListDMS *listDMS, int begin, int end, int **MapId) {
@@ -462,37 +468,24 @@ void ViewDanhMucTable(ListDMS *listDMS, int begin, int end, int **MapId) {
 		}
 		pNode=pNode->next;
 	}
-//	std::cout << "\nin danh muc sach";
 }
 
 void ViewSachMuonTable(DocGia docgia, int **MapId) {
-	std::cout<<"\ncheck a";
 	int X;
 	int Y=HEADER+BLOCK+MG;
 	NodeMuonTra *pNode;
-	if(docgia.listMT==NULL) {
-		std::cout<<"\ndoc gia chua muon sach";
-	}
-	if(docgia.listMT->pFirst==NULL) {
-		std::cout<<"\ndoc gia chua muon sach2";
-	}
 	pNode=docgia.listMT->pFirst;
-	std::cout<<"\ncheck ay";
 	string date;
 	char buffer[30];
-	std::cout<<"\ncheck ax";
 	drawTable(MapId, tableTitleMuonTra, tableTitleWidthMuonTra, 4);
 	setcolor(0);
 	setbkcolor(MAIN_COLOR);
 	settextstyle(TEXT_FONT, 0, 2);
 	int count=0;
-	std::cout<<"\ncheck a";
 	while(pNode!=NULL) {
-		std::cout<<"\ncheck a1";
 		X=ACTICLE+MG*2;
 		setId(MapId, X, Y, TABLE_W, BLOCK, 330+count);
 		outtextxy(X, Y, pNode->data.maSach.c_str());
-		std::cout<<"\ncheck a2";
 		date = (
 			string(itoa(pNode->data.ngayMuon.ngay, buffer, 10)) + "/" 
 			+ string(itoa(pNode->data.ngayMuon.thang, buffer, 10)) + "/" 
@@ -504,14 +497,12 @@ void ViewSachMuonTable(DocGia docgia, int **MapId) {
 			+ string(itoa(pNode->data.ngayTra.thang, buffer, 10)) + "/" 
 			+ string(itoa(pNode->data.ngayTra.nam, buffer, 10))
 		);
-		std::cout<<"\ncheck a3";
 		outtextxy(X+=tableTitleWidthMuonTra[1], Y, date.c_str());
 		outtextxy(X+=tableTitleWidthMuonTra[2], Y, TTMuonTra[pNode->data.trangThai]);
 		Y+=BLOCK;
 		count++;
 		pNode=pNode->next;
 	}
-	std::cout << "\ncheck ham in Sach muon";
 }
 
 void ViewTopTenDauSachTable(DauSach *ArrTopTen[], int **MapId) {
@@ -539,7 +530,6 @@ void ViewTopTenDauSachTable(DauSach *ArrTopTen[], int **MapId) {
 		setId(MapId, ACTICLE+MG, Y, TABLE_W, BLOCK, 350+i);
 		Y+=BLOCK;
 	}
-	std::cout << "\ncheck ham in Top 10 DS";
 }
 
 void ViewDocGiaQuaHan(ListDGQuaHan list, int page, int **MapId) {
@@ -554,11 +544,8 @@ void ViewDocGiaQuaHan(ListDGQuaHan list, int page, int **MapId) {
 	setcolor(0);
 	setbkcolor(MAIN_COLOR);
 	settextstyle(TEXT_FONT, 0, 2);
-	std::cout<<"\ncheck begin:"<<begin<<" end:"<<end;
 	while(k<end && pNode!=NULL) {
-		std::cout<<"\ncheck k";
 		if(k>=begin) {
-			std::cout<<"\ncheck node:"<<pNode->data.MATHE;
 			X=ACTICLE+MG*2;
 			itoa(pNode->data.MATHE, buffer, 10);
 			outtextxy(X, Y, buffer);
@@ -573,7 +560,6 @@ void ViewDocGiaQuaHan(ListDGQuaHan list, int page, int **MapId) {
 		k++;
 		pNode=pNode->next;
 	}
-	std::cout << "\ncheck ham in doc gia qua han";
 }
 
 void printMapId(int **MapId) {
@@ -581,9 +567,7 @@ void printMapId(int **MapId) {
 		for(int j=0; j<w; j+=38) {
 			std::cout << MapId[i][j] << " ";
 		}
-		std::cout << "\n";
 	}
-	std::cout << "Day la MapId\n\n";
 }
 
 void ScanString(EditText &EDIT, int maxlen, int **MapId) {
@@ -596,7 +580,11 @@ void ScanString(EditText &EDIT, int maxlen, int **MapId) {
 	while(1) {
 		len=strlen(EDIT.content);
 		c=getch();
-		if((c>='A' && c<='Z' || c>='0' && c<='9' || c=='_' || c==' ')  && len<=maxlen) {
+		if((c==' ')  && (EDIT.content[len-2]==' ' || len<=1 )) {
+			continue;
+		} else if(c=='_' && len<=1) {
+			continue;
+		} else if((c>='A' && c<='Z' || c>='0' && c<='9' || c=='_' || c==' ')  && len<=maxlen) {
 			EDIT.content[len-1]=c;
 			EDIT.content[len]='_';
 			EDIT.content[len+1]='\0';
@@ -620,6 +608,9 @@ void ScanString(EditText &EDIT, int maxlen, int **MapId) {
 	}
 	EDIT.content[len]='\0';
 	EDIT.content[len-1]='\0';
+	if(EDIT.content[len-2]==' ') {
+		EDIT.content[len-2]='\0';
+	}
 	EDIT.draw(MapId);
 }
 
@@ -648,7 +639,6 @@ void ScanNumber(EditText &EDIT, int maxlen, int **MapId) {
 		} else if(c==ENTER) {
 			break;
 		}
-//		std::cout<<"\n"<<len<<" "<<EDIT.content;
 		EDIT.draw(MapId);
 	}
 	EDIT.content[len]='\0';

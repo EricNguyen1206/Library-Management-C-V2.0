@@ -4,11 +4,8 @@
 #include "local.h"
 #include "model.h"
 #include "View.h"
-//#include "model1.h"
-//#include "cautrucDocGia.h"
 	
 int DauSachController(int **MapId) {
-	std::cout<<"\ncheck dau sach";
 	char buffer[30];
 	int x, y;
 	int mode=0, /*mode = 0: mac dinh,mode = 1: tim kiem*/
@@ -56,12 +53,12 @@ int DauSachController(int **MapId) {
 		delay(0.0001);
         if (ismouseclick(WM_LBUTTONDOWN)){
             getmouseclick(WM_LBUTTONDOWN, x, y);
-            std::cout<<"\nleft click:"<<x<<" "<<y<<"="<<MapId[y][x];
+//            std::cout<<"\nleft click:"<<x<<" "<<y<<"="<<MapId[y][x];
             switch(MapId[y][x]) {
             	case -1://Quay ve menu
             		return 0;
             	case -2://Luu data va thoat chuong trinh
-            		exit(1);
+            		return 5;
             	case 101://Che do them moi
 					if(btnThemmoi.isChoose) {
 						break;
@@ -109,7 +106,6 @@ int DauSachController(int **MapId) {
 								dms->TrangThai=0;
 								dms->ViTri=currentDS->listDMS->pFirst->data.ViTri;
 								InsertLastDMS(currentDS->listDMS, dms);
-								std::cout<<"\ncheck chinh sua so luong: "<<dms->MaSach;
 							}
 						}
 						drawActicle();
@@ -244,7 +240,8 @@ int DauSachController(int **MapId) {
 						}
 						
 						currentDS->listDMS=CreateListDMS(currentDS->ISBN, edViTri.content, currentDS->soLuong);
-						std::cout << InsertDauSach(ArrDauSach, currentDS);
+						currentDS->luotMuon=0;
+						InsertDauSach(ArrDauSach, currentDS);
 						SortDS(ArrDauSach);
 						
 						if(end%13!=0) {

@@ -6,7 +6,6 @@
 #include <stdlib.h>
 
 int DocGiaController(int **MapId) {
-//	std::cout<<"\ncheck doc gia";
 	char buffer[30];
 	int x, y;
 	int lenDG=0, 
@@ -71,7 +70,7 @@ int DocGiaController(int **MapId) {
 		delay(0.0001);
         if (ismouseclick(WM_LBUTTONDOWN)){
             getmouseclick(WM_LBUTTONDOWN, x, y);
-            std::cout<<"\nleft click:"<<x<<" "<<y<<"="<<MapId[y][x];
+//            std::cout<<"\nleft click:"<<x<<" "<<y<<"="<<MapId[y][x];
             switch(MapId[y][x]) {
             	case -1://Quay ve menu
             		return 0;
@@ -281,12 +280,7 @@ int DocGiaController(int **MapId) {
 						p=CreateNode(DocGiaNew);
 						p->data.listMT=CreateListMT();
 						p->data.lichsumuon=0;
-	            		std::cout<<"\n check insert:"<<InsertNode(CayDocGia, p);
-	            		if(p->data.listMT==NULL) {
-	            			std::cout<<"\n the thi bo may chiu";
-						} else {
-							std::cout<<"\ncheck p:"<<p->data.MATHE;
-						}
+	            		InsertNode(CayDocGia, p);
 	            		
 	            		lenDG=0;
             			CreateDocGiaArr(CayDocGia, ListDG, lenDG);
@@ -318,10 +312,6 @@ int DocGiaController(int **MapId) {
 					}
             		break;
             	case 215:
-            		if(GetSoSachMuonDG(&p->data)>0) {
-            			drawNotification(KhongXoaDocGiaMuonSach);
-            			break;
-					}
             		end-=(end%13==0&&end!=lenDG)?0:1;
             		DeleteNodeBST(CayDocGia, p);
             		lenDG=0;
@@ -354,7 +344,6 @@ int DocGiaController(int **MapId) {
 	            		btnFilterName.deleteBtn(BG_COLOR, MapId);
 	            		btnBackTable.isLock=true;
 	            		btnNextTable.isLock=ListDGQH.n<=13?true:false;
-	            		std::cout<<"\ncheck len listQH:"<<ListDGQH.n;
 	            		btnNextTable.draw(MapId);
 	            		btnBackTable.draw(MapId);
             			page=0;

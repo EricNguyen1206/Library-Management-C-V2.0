@@ -149,31 +149,6 @@ struct NodeBST {
 
 typedef NodeBST *Tree;
 
-Tree CayDocGia=NULL;
-int readers;
-
-// ---------- Doc Gia quan han ------------
-struct NodeDGQuaHan {
-	DocGia data;
-	int soNgayQuaHan;
-	NodeDGQuaHan *next;
-};
-
-struct ListDGQuaHan {
-	int n;
-	NodeDGQuaHan *pFirst;
-};
-// ---------- Handle' CayDocGia structure ----------
-NodeBST *CreateNode(DocGia init);
-void DestroyTree(Tree &Root);
-int InsertNode(Tree &Root, NodeBST *x);
-NodeBST *FindNode(Tree Root, NodeBST *x);
-NodeBST *FindNodeById(Tree Root, int ID);
-void PrintTree(Tree Root);
-NodeBST *MostLeftNode(NodeBST *node);
-int DeleteNodeBST(Tree &Root, NodeBST *x);
-void IncayDocGia(Tree root);
-
 NodeBST *CreateNode(DocGia init) {
     NodeBST *p = new NodeBST;
     
@@ -273,17 +248,20 @@ void IncayDocGia(Tree root) {
 		IncayDocGia(root->pRight);
 	}
 }
+Tree CayDocGia=NULL;
+int readers;
 
+// ---------- Doc Gia quan han ------------
+struct NodeDGQuaHan {
+	DocGia data;
+	int soNgayQuaHan;
+	NodeDGQuaHan *next;
+};
 
-// ---------- Handle DocGia quan han ------------
-NodeDGQuaHan *CreateNodeDGQuaHan(DocGia docgia, int soNgayQuaHan);
-int GetSoNgayMuon(DocGia docgia);
-void InsertNodeDGQuaHan(ListDGQuaHan &list, NodeDGQuaHan *pInsert);
-int GetListDGQuaHan(Tree root, ListDGQuaHan &list);
-void SwapNodeQuaHan(NodeDGQuaHan *p1, NodeDGQuaHan *p2);
-void SortListDgQuaHan(ListDGQuaHan ListDGQH);
-
-
+struct ListDGQuaHan {
+	int n;
+	NodeDGQuaHan *pFirst;
+};
 
 NodeDGQuaHan *CreateNodeDGQuaHan(DocGia docgia, int soNgayQuaHan) {
 	NodeDGQuaHan *pNode = new NodeDGQuaHan;
@@ -393,17 +371,6 @@ void SortListDgQuaHan(ListDGQuaHan ListDGQH) {//sap xep danh sach doc gia qua ha
 }
 
 // ---------- Handle DanhMucSach's structure function ------------
-void InitListDMS(ListDMS *&listDMS);
-NodeDMS *CreateNodeDMS(danhMucSach *dms);
-void InsertLastDMS(ListDMS *&listDMS, danhMucSach *dms);
-NodeDMS *GetNodeDmsById(ListDMS *listDMS, int Id);
-ListDMS* CreateListDMS(char ISBN[], string vitri, int n);
-int deleteNodeDMS(DauSach *dauSach, NodeDMS *pDel);
-NodeDMS *GetNodeDmsInDauSach(DauSach *dausach, int index);
-int GetChuaMuon(DauSach *dausach);
-int GetLuotMuon(DauSach *dausach);
-
-
 void InitListDMS(ListDMS *&listDMS) {
 	listDMS = new ListDMS;
 	listDMS->pFirst = NULL;
@@ -512,18 +479,6 @@ int GetLuotMuon(DauSach *dausach) {
 	return count;
 }
 // ---------- Handle DauSach's structure function ------------
-void SortDS(ArrPointerDauSach &dsds);
-char* GetIsbnByMaSach(string masach);
-void FreeDSArr(ArrPointerDauSach &dsds);
-int CompareDS(DauSach *a, DauSach *b, int mode);
-void  XoaDauSach(ArrPointerDauSach &dsds, int pos);
-bool CheckISBN(ArrPointerDauSach dsds, DauSach *ds);
-int InsertDauSach(ArrPointerDauSach &dsds, DauSach *ds);
-bool CheckTrungMax(DauSach *ArrDS[], int lenArr, char isbn[]);
-void GetTopTenDauSach(ArrPointerDauSach dsds, DauSach *ArrDS[]);
-DauSach *SearchDauSachByIsbn(ArrPointerDauSach dsds, char ISBN[]);
-ArrPointerDauSach SearchDauSach(ArrPointerDauSach dsds, string input);
-
 int CompareDS(DauSach *a, DauSach *b, int mode) {//mode=0: so sanh theo the loai; else: so sanh theo ten
 	if(mode == 0) {
 		return strcmp(a->theLoai.c_str(), b->theLoai.c_str());
@@ -606,8 +561,6 @@ ArrPointerDauSach SearchDauSach(ArrPointerDauSach dsds, string input) {
 		if(search != -1) {
 			temp.dsDauSach[++j] = dsds.dsDauSach[i];
 			temp.n++;
-		} else {
-			std::cout<<"\nKhong tim thay "<<input<<" trong chuoi "<<dsds.dsDauSach[i]->tenSach;
 		}
 	}
 	return temp;
@@ -623,6 +576,15 @@ DauSach *SearchDauSachByIsbn(ArrPointerDauSach dsds, char ISBN[]) {
 	return NULL;
 }
 
+DauSach *SearchIsbn(ArrPointerDauSach dsds, char ISBN[]) {
+	int n=dsds.n;
+	for(int i=0; i<n ;i++) {
+		if(strcmp(dsds.dsDauSach[i]->ISBN, ISBN)==0) {
+			return dsds.dsDauSach[i];
+		}
+	}
+}
+
 char* GetIsbnByMaSach(string masach) {
 	char res[10];
 	int i=0;
@@ -635,10 +597,6 @@ char* GetIsbnByMaSach(string masach) {
 
 bool CheckTrungMax(DauSach *ArrDS[], int lenArr, char isbn[]) {//Neu dau sach da ton tai trong mang tra ve false
 	for(int i=0; i<lenArr; i++) {
-//		if(lenArr=9) {
-//			std::cout<<"\ncheck trung"<<i<<": "<<isbn;
-//			std::cout<<" vs"<<ArrDS[i]->ISBN;
-//		}
 		if(strcmp(ArrDS[i]->ISBN, isbn)==0) {
 			return false;
 		}
@@ -664,15 +622,6 @@ void GetTopTenDauSach(ArrPointerDauSach dsds, DauSach *ArrDS[]) {
 
 
 // ---------- Handle MuonTra's structure function ------------
-int GetSoSachMuonDG(DocGia *docgia);
-NodeMuonTra *CreateNodeMT(MuonTra mt);
-ListMT *CreateListMT();
-void InsertLastListMuonTra(ListMT *listMT, MuonTra mt);
-int FindIndexDocGiaInArr(DocGia ListDG[], int mathe);
-NodeMuonTra *GetNodeMTById(ListMT *listMT, int index);
-NodeDMS *GetNodeDmsInListMT(NodeMuonTra *mt, ArrPointerDauSach dsds);
-void DeleteFirstListMuonTra(ListMT *&listMT);
-
 int GetSoSachMuonDG(DocGia *docgia) {
 	int count=0;
 	if(docgia->listMT==NULL) {
@@ -680,7 +629,7 @@ int GetSoSachMuonDG(DocGia *docgia) {
 	}
 	NodeMuonTra *pNode=docgia->listMT->pFirst;
 	while(pNode!=NULL) {
-		if(pNode->data.trangThai==DANGMUON) {
+		if(pNode->data.trangThai==0) {
 			count ++;
 		}
 		pNode=pNode->next;
@@ -702,9 +651,6 @@ ListMT *CreateListMT() {
 }
 void InsertLastListMuonTra(ListMT *listMT, MuonTra mt) {
 	NodeMuonTra *pInsert = CreateNodeMT(mt);
-	if(listMT==NULL) {
-		cout<<"\ndoc gia chuaw muon sach";
-	}
 	NodeMuonTra *pNode = listMT->pFirst;
 	if(listMT->pFirst == NULL) {
 		listMT->pFirst = pInsert;
@@ -722,7 +668,6 @@ int FindIndexDocGiaInArr(DocGia ListDG[], int mathe) {
 			return i;
 		}
 	}
-	std::cout<<"\nko tim thay doc gia trong mang";
 	return -1;
 }
 
@@ -737,19 +682,15 @@ NodeMuonTra *GetNodeMTById(ListMT *listMT, int index) {
 
 NodeDMS *GetNodeDmsInListMT(NodeMuonTra *mt, ArrPointerDauSach dsds) {
 	char isbn[10];
-//	std::cout<<"\ncheck 1";
 	for(int i=0; i<5; i++) {
 		isbn[i]=mt->data.maSach[i];
 	}
-//	std::cout<<"\ncheck 2";
 	dsds.dsDauSach;
 	DauSach *resDS;
 	resDS = SearchDauSachByIsbn(dsds, isbn);
 	NodeDMS *nodeRes=resDS->listDMS->pFirst;
-//	std::cout<<"\ncheck 3";
 	while(nodeRes!=NULL) {
 		if(strcmp(nodeRes->data.MaSach, mt->data.maSach.c_str())) {
-//			std::cout<<"\ncheck get node dms";
 			return nodeRes;
 		}
 		nodeRes=nodeRes->next;
@@ -771,13 +712,6 @@ void DeleteListMuonTra(ListMT *&listMT) {
 
 
 // ---------- Handle DocGia's structure function ------------
-bool IdDocGiaIsUsed(Tree root, int id);
-int CompareDG(DocGia a, DocGia b, int mode);
-void CreateDocGiaArr(Tree t, DocGia arr[], int &lenDocGia);
-void SortDG(DocGia arr[], int lenDocGia, int mode);
-NodeBST *FindNodeBSTById(Tree root, int IdDocGia);
-void FreeMemoryBST(Tree root);
-
 bool IdDocGiaIsUsed(Tree root, int id) {
 	const int STACKSIZE = 500;
 	NodeBST *Stack[STACKSIZE];
@@ -849,14 +783,11 @@ void SortDGByIndex(DocGia arr[]) {
 				temp=arr[i];
 				arr[i]=arr[j];
 				arr[j]=temp;
-//				std::cout<<"\ndocgia "<<i<<" co ma the la:"<<arr[i].MATHE;
 				dem++;
 				break;
 			}
 		}
-//		std::cout<<"||doc gia rac"<<i<<" co ma the rac la:"<<arr[i].MATHE;
 	}
-//	std::cout<<"\ncheck sort "<<dem<<" doc gia";
 }
 
 void FreeMemoryBST(Tree root) {
@@ -892,4 +823,5 @@ NodeBST *FindNodeBSTById(Tree root, int IdDocGia) {
 			break;
 		}//sp=-1: Stack rong thi dung
 	}while (1);
+	return NULL;
 }

@@ -12,6 +12,7 @@ int LoadFileTheDocGia(Tree &Root) {
 	string tmp;
 	int readers = 0, count = 0;
 	FileIn >> readers;
+//	ListMT *listMT;
 	while(!FileIn.eof() && count<readers) {
 		DocGia x;
 		count++;
@@ -27,7 +28,6 @@ int LoadFileTheDocGia(Tree &Root) {
 		InsertNode(Root, p);
 	}
 	FileIn.close();
-	std::cout<<"\ncheck load file doc gia";
 	return (count == readers ? readers : 1);
 }
 
@@ -55,11 +55,9 @@ int LoadFileDauSach(ArrPointerDauSach &ArrDauSach) {
 		getline(FileIn, dausach->theLoai);//6
 		FileIn >> dausach->soLuong;//7
 		FileIn >> dausach->luotMuon;//8
-		std::cout<<"\ncheck luot muon:"<<dausach->luotMuon;
 		i+=InsertDauSach(ArrDauSach, dausach);
 	}
 	FileIn.close();
-	std::cout<<"\ncheck load file dau sach";
 	return (i==len ? len : 0);
 }
 
@@ -95,18 +93,15 @@ int LoadFileDanhMucSach(ArrPointerDauSach &ArrDauSach) {
 		i++;
 	}
 	FileIn.close();
-	std::cout<<"\ncheck load file danh muc";
 	return i==n?i:1;
 }
 
 int LoadFileMuonTra(Tree &root) {
 	std::ifstream FileIn;
-	std::cout<<"\ncheck";
 	FileIn.open("DanhSachMuonTra.txt", ios::in);
 	if(FileIn.fail()) {
 		return -1;
 	}
-	std::cout<<"\ncheck";
 	string tmp;
 	int readers = 0, count = 0;
 	FileIn >> readers;
@@ -115,16 +110,11 @@ int LoadFileMuonTra(Tree &root) {
 	MuonTra mt;
 	NodeBST *pNode;
 	ListMT *listMuonTra;
-	std::cout<<"\ncheck 1";
 	while(!FileIn.eof() && count<readers) {
 		FileIn >> maDocGia;
 		FileIn >> lichsumuon;
 //		listMuonTra = new ListMT;
 //		listMuonTra->pFirst = NULL;
-		std::cout<<"\ncheck 1.1";
-		if(pNode->data.listMT==NULL) {
-			std::cout<<"\nchua tao list mt";
-		}
 		
 		pNode=FindNodeBSTById(root, maDocGia);
 		for(int i=0; i<lichsumuon; i++) {
@@ -135,13 +125,10 @@ int LoadFileMuonTra(Tree &root) {
 			FileIn >> mt.trangThai;
 			InsertLastListMuonTra(pNode->data.listMT, mt);
 		}
-		std::cout<<"\ncheck 2";
-//		pNode->data.listMT=listMuonTra;
 		pNode->data.lichsumuon=lichsumuon;
 		count++;
 	}
 	FileIn.close();
-	std::cout<<"\ncheck load file muon tra";
 	return (count == readers ? readers : 1);
 }
 
