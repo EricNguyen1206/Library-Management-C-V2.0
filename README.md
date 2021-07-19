@@ -4,6 +4,7 @@
 - Việc cảnh báo người vẫn còn chung chung, chưa cụ thể (chủ yếu do tác giả lười, không viết cảnh báo riêng cho từng case cụ thể)
 - Thuật toán thêm đầu sách chưa thật sự tối ưu, về mặt thuật toán sắp xếp và cả thêm khi đã có thứ tự
 - Một điểm chưa hợp lý khi khai báo cấu trúc danh sách trong cấu trúc cây là khai báo kiểu con trỏ, điều này không ảnh hưởng đến hiệu năng nhưng gây ra sự phức tạp và khó bảo trì
+
 *Các điểm "tạm ổn của đồ án"
 - Thuật toán thực hiện bằng thư viện đồ họa, cho giao diện dễ nhìn đối với mặt bằng chung.
 - Không có lỗi đồ họa trong tất cả các giao diện
